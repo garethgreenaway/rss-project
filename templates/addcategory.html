@@ -1,0 +1,23 @@
+<body>
+	{% if form.errors %}
+		<p style="color: red;">
+			Please correct the error{{ form.errors|pluralize }} below.
+		</p>
+	{% endif %}
+
+	<form action="" method="post">{% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="fieldWrapper">
+            {{ form.subject.errors }}
+            <label for="id_category">Category: </label>
+			{{ form.category }}
+            </div>
+
+		<input type="submit" value="Submit">
+
+	</form>
+
+</body>
+</html>

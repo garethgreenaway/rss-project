@@ -1,0 +1,54 @@
+<html>
+<script type="text/javascript" src="/templates/js/dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad:true, isDebug:false"></script>
+
+<script type="text/javascript">
+
+
+dojo.require("dojo.fx");
+dojo.addOnLoad(function(){
+
+	var anim = dojo.animateProperty({
+		node:"testHeading",
+		duration:700,
+		properties: {
+			fontSize: { start:12, end:22, unit:"pt" },
+			opacity: { start:1, end:0.5 },
+			color: { start: "#000", end: "#FFE" }
+		},
+		delay:500
+	});
+	anim.play();
+
+});    
+
+
+</script>
+
+<style type="text/css">
+
+	.testClass {
+		color:#ff0000;
+	} 
+
+	.makeBigger {
+		color: #ff0000;
+		font-size: 200%;
+	}
+
+</style>
+
+<body>
+
+	<p id="testHeading">Dojo Skeleton Page</p>
+    
+	<a class="link" href="#">First link</a>
+	<a class="link" href="#">Second Link</a>    
+
+	<p class="para">First paragraph</p>
+	<p class="para">Second paragraph</p>
+	<p class="para">Third paragraph</p>
+
+</body>
+
+</html>
+

@@ -1,0 +1,310 @@
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+code,
+del,
+dfn,
+em,
+img,
+q,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td
+{
+	image-rendering: optimizeQuality;
+	-ms-interpolation-mode: bicubic;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+
+table
+{
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+caption,
+th,
+td
+{
+	text-align: left;
+	font-weight: normal;
+}
+
+table,
+td,
+th
+{
+	vertical-align: middle;
+}
+
+blockquote:before, blockquote:after, q:before, q:after
+{
+	content: "";
+}
+
+blockquote,
+q
+{
+	quotes: "" "";
+}
+
+a img
+{
+	border: none;
+}
+
+img
+{
+	image-rendering: optimizeQuality;
+	-ms-interpolation-mode: bicubic;
+}
+
+pre,
+code,
+kbd,
+samp,
+var,
+output
+{
+	white-space: pre;
+}
+
+mark
+{
+	background: #ffffd9;
+}
+
+nav,
+section,
+article,
+header,
+aside,
+footer,
+figure,
+dialog
+{
+	display: block;
+}
+
+time,
+progress,
+mark,
+output
+{
+	display: inline;
+}
+
+/**
+
+ * Include all the extra files
+
+*/
+/**
+
+ * Constants
+
+*/
+/**
+
+ * Mixins
+
+*/
+body
+{
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #333333;
+}
+
+/*Layout*/
+#header
+{
+	height: 50px;
+	background-position: top left;
+	background-repeat: repeat-x;
+	background-image: url(/rssproject/css/scaffold/cache/gradients/vertical_50_0099cc_0066cc.png);
+}
+
+#header-container
+{
+	max-width: 1200px;
+	min-width: 880px;
+	margin: 0 auto;
+	padding: 0 40px;
+}
+
+#top-links
+{
+	float: right;
+	width: 300px;
+	text-align: right;
+}
+
+#top-links ul
+{
+	list-style: none;
+	margin-top: 12px;
+}
+
+#top-links ul li
+{
+	display: inline-block;
+	list-style: none;
+	font-size: 11px;
+}
+
+.signin
+{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+	text-transform: uppercase;
+	background-color: #3399cc;
+}
+
+.signin:hover
+{
+	background: #66ccff;
+}
+
+#main-container
+{
+	margin: 0 auto;
+	max-width: 1200px;
+	min-width: 880px;
+	padding: 0 40px;
+}
+
+#logo
+{
+	float: left;
+}
+
+#leaderboard-ad
+{
+	width: 728px;
+	height: 90px;
+	margin: 10px 0;
+	background: #CCCCCC;
+	float: right;
+}
+
+#nav-container
+{
+	height: 30px;
+	padding: 10px;
+	max-width: 1200px;
+	background-position: top left;
+	background-repeat: repeat-x;
+	background-image: url(/rssproject/css/scaffold/cache/gradients/vertical_50_eeeeee_dddddd.png);
+	clear: both;
+	margin: 20px 0;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#navigation
+{
+	float: left;
+	width: 500px;
+}
+
+#search-container
+{
+	float: right;
+	width: 300px;
+	height: 30px;
+}
+
+#search-input-container,
+#search-submit-container
+{
+	float: left;
+	height: 30px;
+}
+
+#main-content
+{
+	clear: both;
+	margin: 0 auto;
+	position: relative;
+}
+
+#content-holder
+{
+	float: left;
+	margin-right: -320px;
+	width: 100%;
+}
+
+#content
+{
+	margin-right: 320px;
+	float: none;
+	width: auto;
+	background: #eee;
+}
+
+#sidebar-right
+{
+	float: right;
+	width: 300px;
+	position: relative;
+	background: #ddd;
+}
+
+#footer
+{
+	clear: both;
+	height: 200px;
+}
+
+/*Fonts and Colors*/
+#top-links,
+#top-links a
+{
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+}

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings
+END
+org.eclipse.wst.server.core.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.wst.server.core.prefs
+END
+org.eclipse.mylyn.monitor.ui.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.monitor.ui.prefs
+END
+org.eclipse.epp.usagedata.recording.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.epp.usagedata.recording.prefs
+END
+org.eclipse.wst.jsdt.ui.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.wst.jsdt.ui.prefs
+END
+org.eclipse.jdt.ui.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.ui.prefs
+END
+org.eclipse.jst.j2ee.webservice.ui.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jst.j2ee.webservice.ui.prefs
+END
+org.eclipse.ui.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.prefs
+END
+org.eclipse.ui.workbench.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs
+END
+org.eclipse.mylyn.context.core.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.context.core.prefs
+END
+org.eclipse.team.svn.core.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/42/rss-project/mysite/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.team.svn.core.prefs
+END

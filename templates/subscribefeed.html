@@ -1,0 +1,35 @@
+<body>
+
+    {{ feed_uuid }}
+
+	{% if form.errors %}
+		<p style="color: red;">
+			Please correct the error{{ form.errors|pluralize }} below.
+		</p>
+	{% endif %}
+
+	<form action="" method="post">{% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div style="display:block;" class="fieldWrapper">
+                {{ form.subject.errors }}
+                <label for="id_category">Feed Category: </label>
+			    {{ form.category_choice }}
+                <a class="iframe-pop" href="/category/add"><img style="vertical-align: bottom" src="/images/green_plus.png" width=20 height=20 border=0></a>
+            </div>
+
+            <div style="display:none;" class="fieldWrapper">
+                {{ form.subject.errors }}
+                <label for="id_category">Feed Category: </label>
+			    {{ form.category }}
+		        <input type="text" name="test">
+            </div>
+
+		<input type="submit" value="Submit">
+
+	</form>
+
+
+</body>
+</html>

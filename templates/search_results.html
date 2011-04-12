@@ -1,0 +1,19 @@
+{% include 'search_form.html' %}
+
+<p>You searched for: <strong>{{ query }}</strong></p>
+
+{% if news %}
+
+	<p>Found {{ news|length }} item{{ news|pluralize }}.</p>
+	<ul>
+		{% for item in news %}
+		<li>
+		<a href="{{ item.url }}"> {{ item.title }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>No news items matched your search criteria</p>
+{% endif %}
+<br/>
+

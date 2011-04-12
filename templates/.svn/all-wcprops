@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/60/rss-project/templates
+END
+addfeed.html
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/40/rss-project/templates/addfeed.html
+END
+feedThanks.html
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/5/rss-project/templates/feedThanks.html
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/30/rss-project/templates/.project
+END
+search_results.html
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/5/rss-project/templates/search_results.html
+END
+search_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/17/rss-project/templates/search_form.html
+END
+base.html
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/5/rss-project/templates/base.html
+END

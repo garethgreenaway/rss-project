@@ -1,0 +1,79 @@
+10
+
+dir
+61
+https://www.wiked.org/svn/rss-project/mysite/.metadata/.plugins
+https://www.wiked.org/svn
+
+
+
+2010-04-24T03:57:26.436756Z
+42
+dron
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4eddbd79-3bb7-4582-a875-e54598ba98ae
+
+org.eclipse.datatools.connectivity
+dir
+
+org.eclipse.mylyn.bugzilla.core
+dir
+
+org.eclipse.team.cvs.core
+dir
+
+org.eclipse.ui.intro
+dir
+
+org.eclipse.wst.jsdt.core
+dir
+
+org.eclipse.jdt.core
+dir
+
+org.eclipse.mylyn.tasks.ui
+dir
+
+org.eclipse.wst.common.snippets
+dir
+
+org.eclipse.wst.server.core
+dir
+
+org.eclipse.core.runtime
+dir
+
+org.eclipse.debug.core
+dir
+
+org.eclipse.team.svn.core
+dir
+
+org.eclipse.epp.usagedata.recording
+dir
+
+org.eclipse.wst.jsdt.ui
+dir
+
+org.eclipse.jdt.ui
+dir
+
+org.eclipse.ui.workbench
+dir
+
+org.eclipse.core.resources
+dir
+

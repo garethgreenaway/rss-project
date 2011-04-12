@@ -1,0 +1,16 @@
+
+{% if inbox %}
+
+	<ul>
+
+		{% for message in inbox %}
+			<li> <a href="{{ message.url }}"> {{ message.title }} </a> </li>
+		{% endfor %}
+
+	</ul>
+
+{% else %}
+
+	<p>No messages available</p>
+
+{% endif %}

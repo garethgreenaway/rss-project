@@ -1,0 +1,48 @@
+<html>
+<script type="text/javascript" src="/templates/js/dojotoolkit/dojo/dojo.js" djConfig="parseOnLoad:true, isDebug:false"></script>
+
+<script type="text/javascript">
+
+	var init = function(){
+	
+		var contentNode = dojo.byId("content");
+
+		dojo.xhrGet({
+			url: "sample.txt",
+			handleAs: "text",
+			load: function(data, args) {
+				dojo.fadeOut({
+					node: contentNode,
+					duration:2000,
+					onEnd: function(){
+						contentNode.innerHTML = data;
+						dojo.fadeIn({ node: contentNode }).play();
+					}
+				}).play();
+			},
+			error: function(error, args) {
+				console.warn("error!", error);
+			}
+		});
+	};
+
+	dojo.addOnLoad(init);
+
+</script>
+
+<style type="text/css">
+    #container {
+        border:1px dotted #b7b7b7;
+        background:#ededed;
+        width:750px;
+        height:55px;
+    }
+</style>
+<div id="container" class="box">
+    <div id="content">
+    I am some Inner Content.
+    I am going to be replaced
+    </div>
+</div>
+
+</html>

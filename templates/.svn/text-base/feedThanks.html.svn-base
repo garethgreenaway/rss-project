@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>Thanks</title>
+</head>
+
+<body>
+<table>
+	<tr><td>Thanks for submitting a feed.</td></tr>
+
+	<tr><td><a href="/">Home</a></td></tr>
+
+</table>
+</body>
+</html>

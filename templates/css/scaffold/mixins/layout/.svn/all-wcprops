@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/47/rss-project/templates/css/scaffold/mixins/layout
+END
+min-dimensions.css
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/47/rss-project/templates/css/scaffold/mixins/layout/min-dimensions.css
+END
+clearfix.css
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/47/rss-project/templates/css/scaffold/mixins/layout/clearfix.css
+END
+float.css
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/47/rss-project/templates/css/scaffold/mixins/layout/float.css
+END
+has-layout.css
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/47/rss-project/templates/css/scaffold/mixins/layout/has-layout.css
+END

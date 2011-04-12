@@ -1,0 +1,89 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#     * Rearrange models' order
+#     * Make sure each model has one field with primary_key=True
+# Feel free to rename the models, but don't rename db_table values or field names.
+#
+# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
+# into your database.
+
+from django.db import models
+
+class AuthUser(models.Model):
+    id = models.IntegerField(primary_key=True)
+    username = models.CharField(unique=True, max_length=30)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.CharField(max_length=75)
+    password = models.CharField(max_length=128)
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField()
+    is_superuser = models.BooleanField()
+    last_login = models.DateTimeField()
+    date_joined = models.DateTimeField()
+
+    class Meta:
+        db_table = u'auth_user'
+
+    def __unicode__(self):
+        return "%s" % (self.username)
+
+class Feed(models.Model):
+    name = models.CharField(max_length=100)
+    logo = models.URLField()
+    url = models.URLField()
+    site_uuid = models.CharField(unique=True, max_length=50)
+    next_update = models.DateTimeField()
+    category = models.CharField(max_length=25)
+
+    def __unicode__(self):
+        return "%s - %s" % (self.name, self.url)
+
+class FeedItem(models.Model):
+    site = models.ForeignKey(Feed)
+    title = models.CharField(max_length=150)
+    story_uuid = models.CharField(unique=True, max_length=50)
+    url = models.URLField(max_length=250)
+    updatedDate = models.DateTimeField()
+    addedDate = models.DateTimeField()
+    summary = models.TextField()
+
+    def __unicode__(self):
+        return "%s" % (self.title)
+
+class Tag(models.Model):
+    user = models.ForeignKey(AuthUser)
+    tag_name = models.CharField(unique=True, max_length=50)
+
+    def __unicode__(self):
+        return "%s" % (self.tag_name)
+
+class UserFeed(models.Model):
+    username = models.ForeignKey(AuthUser)
+    feed = models.ForeignKey(Feed)
+    tags = models.ManyToManyField(Tag, blank=True)
+
+    def __unicode__(self):
+        return "%s - %s" % (self.username,self.feed.name)
+
+class UserInbox(models.Model):
+    username = models.ForeignKey(AuthUser)
+    inbox = models.ManyToManyField(FeedItem)
+
+    def __unicode__(self):
+        return "%s" % (self.username)
+
+class Person(models.Model):
+    user = models.ForeignKey(AuthUser)
+    friends = models.ManyToManyField('self', blank=True)
+
+    def __unicode__(self):
+    	return self.user.username
+
+class FeedStaging(models.Model):
+    url = models.URLField()
+    user = models.CharField(blank=True, max_length=30)
+    tag = models.CharField(blank=True, max_length=30)
+
+    def __unicode__(self):
+        return "%s" % (self.url)

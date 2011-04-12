@@ -1,0 +1,42 @@
+<body>
+	{% if form.errors %}
+		<p style="color: red;">
+			Please correct the error{{ form.errors|pluralize }} below.
+		</p>
+	{% endif %}
+
+	<form id="add-feed-form" action="" method="post">{% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="fieldWrapper">
+            {{ form.subject.errors }}
+            <label for="id_url">Feed URL:</label>
+			{{ form.url }}
+            </div>
+
+            <div style="display:block;" class="fieldWrapper">
+                {{ form.subject.errors }}
+                <label for="id_category">Feed Category: </label>
+			    {{ form.category }}
+                <a class="iframe-pop" href="/category/add"><img style="vertical-align: bottom" src="/images/green_plus.png" width=20 height=20 border=0></a>
+            </div>
+
+            <div style="display:none;" class="fieldWrapper">
+                {{ form.subject.errors }}
+                <label for="id_category">Feed Category: </label>
+		        <input type="text" name="test">
+            </div>
+
+            <div class="fieldWrapper">
+            {{ form.subject.errors }}
+            <label for="id_subscribe">Subscribe to this feed: </label>
+			{{ form.subscribe}}
+            </div>
+
+		<input type="submit" value="Submit">
+
+	</form>
+
+</body>
+</html>

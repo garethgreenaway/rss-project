@@ -1,0 +1,27 @@
+<body>
+
+    Story: {{ story_uuid }}
+
+	{% if form.errors %}
+		<p style="color: red;">
+			Please correct the error{{ form.errors|pluralize }} below.
+		</p>
+	{% endif %}
+
+	<form action="" method="post">{% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div style="display:block;" class="fieldWrapper">
+                {{ form.friends.errors }}
+                <label for="id_category">Share with: </label>
+			    {{ form.friends_choice }}
+            </div>
+
+		<input type="submit" value="Submit">
+
+	</form>
+
+
+</body>
+</html>

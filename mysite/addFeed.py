@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+#
+# Pull in the django support
+#
+from django.core.management import setup_environ
+import settings
+setup_environ(settings)
+
+# Celery
+from StagingFeedDaemon import addFeed
+
+from django.db import connection
+from browseFeeds.models import FeedStaging, Feed
+
+from datetime import datetime
+import sys
+import getopt
+
+def usage():
+        print """
+Usage: addFeed.py options
+
+Options:
+        -h, --help      Show this message
+        -p, --person	Person to subscribe the the feeds
+        -u, --url	    Url to subscribe to
+        -t, --tag	    Tag to associate feed with
+"""
+
+
+try:
+	opts, args = getopt.gnu_getopt(sys.argv[1:], "u:p:t:h", ["url=", "person=", "tag=","help"])
+except getopt.GetoptError, err:
+
+	print str(err)
+    	usage()
+       	sys.exit(2)
+
+user = None
+tag = None
+urls = []
+
+for o, a in opts:
+
+	if o in ("-p", "--person"):
+		user = a
+
+	elif o in ("-u", "--url"):
+		urls.append(a)
+
+	elif o in ("-t", "--tag"):
+		tag = a
+
+
+for url in urls:
+	print "Adding %s" % (url)
+	if user and not tag:
+		addFeed.delay(FeedStaging(url=url,user=user))
+
+	elif user and tag:
+		addFeed.delay(FeedStaging(url=url,user=user,tag=tag))
+
+	else:
+		addFeed.delay(FeedStaging(url=url))
+
+

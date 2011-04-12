@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/59/rss-project/mysite/browseFeeds
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/59/rss-project/mysite/browseFeeds/admin.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/59/rss-project/mysite/browseFeeds/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/5/rss-project/mysite/browseFeeds/__init__.py
+END
+tests.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/5/rss-project/mysite/browseFeeds/tests.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/59/rss-project/mysite/browseFeeds/models.py
+END
+forms.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/21/rss-project/mysite/browseFeeds/forms.py
+END

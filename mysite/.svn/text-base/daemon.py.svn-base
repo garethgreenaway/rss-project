@@ -1,0 +1,183 @@
+#!/usr/bin/env python
+
+import feedparser
+import hashlib
+import psycopg2
+import sys
+import re
+import random
+import time
+import dateutil.parser
+
+from RepeatTimer import RepeatTimer
+from threading import Thread, Timer
+from Queue import Queue
+
+#
+# Pull in the django support
+#
+from django.core.management import setup_environ
+import settings
+setup_environ(settings)
+
+from browseFeeds.models import Feed, FeedItem
+from datetime import tzinfo, timedelta, datetime
+from django.db import connection
+
+
+ZERO = timedelta(0)
+TZOFFSETS = {"EDT": +10800}
+
+# A UTC class.
+
+class UTC(tzinfo):
+    """UTC"""
+
+    def utcoffset(self, dt):
+        return ZERO
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return ZERO
+
+
+def worker(input, output):
+	for url in iter(input.get, 'STOP'):
+		result = grabStories(url)
+		output.put(result)
+
+def generate_uuid(title):
+	m = hashlib.md5()
+	m.update(title)
+	return m.hexdigest()
+
+def grabStories(url):
+
+	d = feedparser.parse(url)
+
+	#
+	# UUID for the website we're pulling the feed from
+	#
+	site_uuid = generate_uuid(url)
+
+	site = Feed.objects.filter(site_uuid__exact=site_uuid)[0]
+
+	stories = []
+	results = []
+
+	for i in range(0, len(d.entries)):
+
+		e = d.entries[i]
+
+		#
+		# UUID for the Url to the story
+		#
+		story_uuid = generate_uuid(e.link)
+		story_title = e.title
+
+		if getattr(e, 'summary', False):
+			summary = e.summary
+		elif getattr(e, 'subtitle', False):
+			summary = e.subtitle
+		else:
+			pass
+
+		now = time.time()
+
+		if hasattr(e, "updated"):
+			#
+			# Noticed a few feed items with invalid dates.
+			#
+			e.updated = re.sub(" 24:", " 00:", e.updated)
+	
+			addedDate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
+			updatedDate = dateutil.parser.parse(e.updated, ignoretz=True).strftime("%Y-%m-%d %H:%M:%S")
+		else:
+			addedDate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
+			updatedDate = addedDate
+	
+
+		if not FeedItem.objects.filter(story_uuid__exact=story_uuid):
+
+			#print "============================================"
+			#print e.updated
+			#print dateutil.parser.parse(e.updated, tzinfos=TZOFFSETS)
+			#print dateutil.parser.parse(e.updated, tzinfos=TZOFFSETS).astimezone(UTC())
+			#print "============================================"
+
+			f = FeedItem(site=site, title=story_title, story_uuid=story_uuid, url=e.link, updatedDate=updatedDate, addedDate=addedDate, summary=summary)
+			f.save()
+			print "Adding: %s" % (story_title)
+	
+	#
+	# Schedule the next feed update
+	#
+	now = time.time()
+	jitter = random.randint(15,20) * 60
+	nextUpdate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now + jitter))
+	site.next_update = nextUpdate
+	site.save()
+	
+	#
+	# Close the connection to the database
+	#
+	connection.close()
+	return results
+
+def run():
+
+	print "Checking for updates at " + time.asctime()
+
+	NUMBER_OF_PROCESSES = 4
+
+	#
+	# Create queues
+	#
+	task_queue = Queue()
+	done_queue = Queue()
+
+	#results = Feed.objects.all()
+	results = Feed.objects.filter(next_update__lte=datetime.now())
+
+	print results
+
+	#
+	# If nothing is scheduled, just return.
+	#
+	if len(results) == 0:
+		return
+
+	#
+	# Add the urls to the queue to be processed
+	#
+	for item in results:
+		task_queue.put(item.url)
+
+	#
+	# Start up out workers to process the queue
+	#
+	for i in range(NUMBER_OF_PROCESSES):
+		Thread(target=worker, args=(task_queue, done_queue)).start()
+	
+	#
+	# We're done, so tell all the workers to stop
+	#
+	for i in range(NUMBER_OF_PROCESSES):
+		task_queue.put('STOP')
+
+if __name__ == '__main__':
+
+	#
+	# Run once to update any feeds that need updating, then
+	# run test every 5 minutes to check for scheduled feed updates
+	#
+	try:
+		run()
+		r = RepeatTimer(60.0, run)
+		r.start()
+	except (EOFError, KeyboardInterrupt):
+		sys.exit()
+	
+

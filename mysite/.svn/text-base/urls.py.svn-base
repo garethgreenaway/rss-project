@@ -1,0 +1,35 @@
+from django.conf.urls.defaults import *
+from django.contrib.auth.views import login, logout
+from django.conf import settings
+
+
+# Uncomment the next two lines to enable the admin:
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    (r'^$', 'mysite.browseFeeds.views.index'),
+    (r'^search/$', 'mysite.browseFeeds.views.search'),
+    (r'^inbox/$', 'mysite.browseFeeds.views.viewInbox'),
+    (r'^admin/', include(admin.site.urls)),
+    (r'^accounts/login/$', login),
+    (r'^accounts/logout/$', logout),
+    (r'^accounts/profile/$', 'mysite.browseFeeds.views.index'),
+    (r'^feeds/add/$', 'mysite.browseFeeds.views.addFeed'),
+    (r'^feeds/thanks/$', 'mysite.browseFeeds.views.feedThanks'),
+    (r'^dojango/', include('dojango.urls')),
+    (r'^simple-search/$', 'mysite.browseFeeds.views.simple_ajax_search'),
+    (r'^simple-add/$', 'mysite.browseFeeds.views.ajax_addFeed'),
+    (r'^grab/feed/(\w+)/$', 'mysite.browseFeeds.views.grab_feed'),
+    (r'^grab/item/(\w+)/$', 'mysite.browseFeeds.views.grab_item'),
+    (r'^grab/news/$', 'mysite.browseFeeds.views.ajax_grab_latest_news'),
+)
+
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^icons/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/gareth/code/python/rss-project/templates/icons'}),
+        (r'^js/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/gareth/code/python/rss-project/templates/js'}),
+        (r'^css/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/gareth/code/python/rss-project/templates/css'}),
+    )
+

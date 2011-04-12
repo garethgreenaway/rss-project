@@ -1,0 +1,4 @@
+from django import forms
+
+class AddFeedForm(forms.Form):
+	url = forms.CharField(label='Feed URL', max_length=200)

@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>RSS Project</title>
+<link rel="stylesheet" href="http://theme.wiked.org/css/scaffold/index.php?f=/css/styles.css" />
+<link rel="stylesheet" href="http://theme.wiked.org/css/jquery-ui-1.8.1.custom.css" />
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+<script type="text/javascript" src="http://theme.wiked.org/js/jquery-ui-1.8.1.custom.min.js"></script>
+<script type="text/javascript" src="http://theme.wiked.org/js/jquery.timers-1.2.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://theme.wiked.org/js/shadowbox/shadowbox.css">
+<script type="text/javascript" src="http://theme.wiked.org/js/shadowbox/shadowbox.js"></script>
+
+<script type="text/ecmascript"> 
+	/*$(document).ready(function(){
+		$(".feed-list").hide();
+		$(".tag > a").click(function(){
+			$(".feed-list:visible").slideUp("slow");
+			$(this).next().slideDown("slow");
+			return false;
+		});
+	});*/
+	
+	$(function() {
+		$("#tabs").tabs();
+	});
+	
+	$(document).ready(function() {
+		$("#accordion").accordion({ 
+			animated: 'bounceslide',
+			autoHeight: false
+			}
+		);
+	});
+
+	Shadowbox.init({
+			player: "inlinehtml"
+	});
+
+	$(document).everyTime(300000, function(i) {
+
+		feedId = $("#feedId").val();
+		
+		if (feedId != "") {
+			var url = "/grab/feed/" + feedId + "/";
+		} else {
+			var url = "/grab/news/";
+		}
+
+		$("div").filter(".feed").each(function(index) {
+
+			$(this).fadeOut("slow");
+			$(this).remove();
+
+		});
+
+		$.getJSON(url, function(data) {
+
+			htmlData = '';
+
+			for (item in data.results) {
+
+				clickURL = "openFeedShadowBox(\"" + data.results[item]['url'] + "\")"
+
+				feedTitle = data.results[item]['title'];
+				feedSummary = data.results[item]['summary'];
+				feedLogo = data.results[item]['logo'];
+				feedUrl = data.results[item]['url'];
+
+                    		htmlData = '<div class="feed" style="display:none">';
+                       		htmlData += '<div class="feed-image">';
+                          	htmlData += '<img src="' + feedLogo + '" /></div>';
+				htmlData += '<div class="feed-info">';
+                               	htmlData += '<h3 class="feed-title"><a href="#" onClick=' + clickURL + '>' + feedTitle + '</a></h3>';
+                                htmlData += '<div class="feed-desc">' + feedSummary + '</div>';
+                                htmlData += '<div class="feed-meta">';
+				htmlData += '<div class="feed-tag first">Software</div>';
+                                htmlData += '<div class="feed-tag">Technology</div>';
+                                htmlData += '<div class="feed-tag last">Internet</div>';
+                                htmlData += '<div class="feed-comment">15</div>';
+                                htmlData += '</div>';
+                            	htmlData += '</div>';
+                        	htmlData += '</div>';
+
+				$row = $(htmlData);
+				$("#content").append($row.hide().fadeIn());
+
+			}
+
+		});
+
+		$("div").filter(".feed").each(function(index) {
+
+			$(this).fadeIn("slow");
+
+		});
+
+	}, 300000);
+
+	function feed_update(feed) {
+
+		var url = "/grab/feed/" + feed + "/";
+	
+		$("#feedId").val(feed);
+
+		$("#content").empty()
+		$.getJSON(url, function(data) {
+			for (item in data.results) {
+
+				clickURL = "openFeedShadowBox(\"" + data.results[item]['url'] + "\")"
+
+				feedTitle = data.results[item]['title'];
+				feedSummary = data.results[item]['summary'];
+				feedLogo = data.results[item]['logo'];
+				feedUrl = data.results[item]['url'];
+
+                    		htmlData = '<div class="feed">';
+                       		htmlData += '<div class="feed-image">';
+                          	htmlData += '<img src="' + feedLogo + '" /></div>';
+				htmlData += '<div class="feed-info">';
+                               	htmlData += '<h3 class="feed-title"><a href="#" onClick=' + clickURL + '>' + feedTitle + '</a></h3>';
+                                htmlData += '<div class="feed-desc">' + feedSummary + '</div>';
+                                htmlData += '<div class="feed-meta">';
+				htmlData += '<div class="feed-tag first">Software</div>';
+                                htmlData += '<div class="feed-tag">Technology</div>';
+                                htmlData += '<div class="feed-tag last">Internet</div>';
+                                htmlData += '<div class="feed-comment">15</div>';
+                                htmlData += '</div>';
+                            	htmlData += '</div>';
+                        	htmlData += '</div>';
+
+				$("#content").append(htmlData);
+			}
+		});
+	}
+
+
+	function openFeedShadowBox(url) {
+
+		Shadowbox.setup(url);
+		Shadowbox.open({
+			content:	url,
+			player: 	"iframe",
+		});
+
+	}
+
+
+		//function grabFeedItem(uuid) {
+
+		//	var contentNode = dojo.byId("currentFeedItem");
+
+		//	dojo.xhrGet({
+		//		url: "/grab/item/" + uuid + "/",
+		//		handleAs: "json",
+		//		
+		//		load: function(response, ioargs){
+		//			dojo.fadeOut({
+		//				node: contentNode,
+		//				duration:500,
+		//				onEnd: function(){
+                 //   					contentNode.innerHTML = response.results;
+		//					dojo.fadeIn({ node: contentNode , duration:500 }).play();
+		//				}
+		//			}).play();
+		//		}
+		//	});
+		//}
+
+		//function searchFeeds(){
+		//	var form = dojo.byId("searchForm");
+		//	var resultsOut = dojo.byId("currentFeedItems");
+
+		//	resultsOut.innerHTML = "...Waiting..."
+
+		//	dojo.xhrPost({url:form.action,
+		//		handleAs: "json",
+		//		content:{q:form.q.value
+		//		},
+		//		load:function(response, ioArgs){
+		//			if (response.success) {
+		//				if (response.results.length > 0 ) {
+		//					resultsOut.innerHTML = ""
+		//					for (item in response.results) {
+		//						clickURL = "grabFeedItem(\"" + response.results[item].story_uuid + "\")"
+		//						data = "<a href=\"#\" onClick=" + clickURL + ">" + response.results[item].title + "</a><br />"
+		//						resultsOut.innerHTML = resultsOut.innerHTML + data;
+		//					}
+		//				}
+		//					
+		//			} else {
+		//				dojo.byId("results").innerHTML = "Error: " + response.error;
+		//			}
+		//		}
+		//	});
+//
+//			form.q.value = ""
+//
+//		}
+
+        	//function addFeed(){
+		//	var form = dojo.byId("addForm");
+
+		//	dojo.xhrPost({url:form.action,
+		//		handleAs: "json",
+		//		form:dojo.byId("addForm"),
+		//		load:function(response, ioArgs){
+		//			if (response.success) {
+		//				dojo.byId("AddResults").innerHTML = "Thanks!"
+		//			} else {
+		//				dojo.byId("AddResults").innerHTML = "Error!"
+		//			}
+		//		}
+		//	});
+		//	form.url.value = ""
+		//}
+               
+        </script>
+
+<body>
+	<input type="hidden" id="feedId" name="feedId" value="" />
+
+	<div id="header">
+            	<div id="header-container">
+                  <div id="top-links" >
+                    <ul>
+		{% if request.user.is_authenticated %}
+                      <li class="hello">Hello <span class="username">{{ request.user.get_full_name }} </span></li>
+                      <li class="inbox no-mail"><a class="mail" href="#">Inbox <span>({{ inbox|length }})</span></a>
+                      	<div id="tabs">
+                        	<ul>
+                            	<li><a href="#tabs-1">Recommended Feeds</a></li>
+                                <li><a href="#tabs-2">Recommended Feeds Items</a></li>
+                            </ul>
+                            <div id="tabs-1">
+                            	<p>Recommended Feeds Items</p><br/>
+				<ul>
+				{% for item in inbox %}
+					<li>{{ item.title|truncatewords:3 }}</li>
+				{% endfor %}
+				</ul>
+                            </div>
+                            <div id="tabs-2">
+                            	<p>Recommended Feeds</p>
+                            </div>
+                            
+                         </div>
+                      </li>
+                      <li class="account"><a href="#">My Account</a></li>
+                      <li class="logout"><a href="#">Logout</a></li>
+
+			{% else %}
+                        <li class="create"><a href="#">Create an Account</a></li>
+                        <li class="signin"><a href="#">Sign In</a>
+				<fieldset id="signin-menu">
+					<form method="" action="" class="" id="">
+						<label>Username or Email</label>
+						<input type="text" name="" id="" size="" maxlength="" value="" />
+						<label>Password</label>
+						<input type="password" name="" id="" size="" maxlength="" value="" />
+						<input type="submit" id="signin-submit" value="Submit" />
+						<p id="forgot">Forgot your Username or Password?</p>
+						<p id="create">Create an Account</p>
+					</form>
+				</fieldset>
+			</li>
+			{% endif %}
+                    </ul>
+                </div>
+             </div>
+	  	</div>
+	<div id="main-container" >
+      	<div id="logo">Logo</div>
+      	<div id="leaderboard-ad">Leaderboard Ad</div>
+      	<div id="nav-container">
+			<div id="navigation">
+            	<ul>
+                	<li class="first"><a href="/">Home</a></li>
+                    <li><a href="#">Featured Feeds</a></li>
+                    <li><a href="#">Popular Feeds</a></li>
+                    <li class="last"><a href="#">Recent Feeds</a></li>
+                </ul>
+            </div>
+			<div id="search-container">
+				<form method="" action="" class="" id="">
+					<div id="search-input-container">
+						 <input type="text" name="" id="search-input" size="30" maxlength="255" value="Search" />
+					</div>
+					<div id="search-submit-container">
+                        <input type="image" id="search-submit" src="http://theme.wiked.org/css/images/search_submit_bg.png" border="0" />
+					</div>
+				</form>
+			</div>
+		</div>
+			<div id="main-content">
+				<div id="content-holder">
+					<div id="content">
+
+			{% for item in latest_news %}
+
+                    	<div class="feed">
+                        	<div class="feed-image">
+                            	<img src={{ item.logo }} /></div>
+                            <div class="feed-info">    
+                                <h3 class="feed-title"><a rel="shadowbox" href="{{ item.url }}"> {{ item.title }}</a></h3>
+                                <div class="feed-desc">{{ item.summary }}</div>
+                                <div class="feed-meta">
+                                    <div class="feed-tag first">Software</div>
+                                    <div class="feed-tag">Technology</div>
+                                    <div class="feed-tag last">Internet</div>
+                                    <div class="feed-comment">15</div>
+                                </div>
+                            </div>
+                        </div>
+
+			{% endfor %}
+
+					</div>
+				</div>
+              </div>
+              <div id="sidebar-right">
+              <h3>Your Feeds</h3>
+				<div id="accordion">
+			        {% for item in myTags %}
+					  <h3 id="tag-1" class="tag odd"><a href="#">{{ item.tag.tag_name }}</a></h3>
+                      <ul class="feed-list">
+			          {% for feed in item.feeds %}
+                		<li class="feed-id" class="feed odd">
+				            <a href="#" onClick="feed_update('{{ feed.feed.site_uuid }}')"> {{ feed.feed.name }} </a>
+				            </li>
+			          {% endfor %}
+                    </ul>
+			        {% endfor %}
+					  <h3 id="tag-1" class="tag odd"><a href="#">Uncatagorized</a></h3>
+                      <ul class="feed-list">
+			          {% for feed in uncatagorized_feeds %}
+                		<li class="feed-id" class="feed odd">
+				            <a href="#" onClick="feed_update('{{ feed.feed.site_uuid }}')"> {{ feed.feed.name }} </a>
+				        </li>
+			          {% endfor %}
+					  </ul>
+					</div>
+				</div>
+			</div>
+	</div>
+    <div id="footer">
+    	<div id="footer-container">
+        	<div id="footer-1" class="footer-box first">
+            	<h4>Site Links</h4>
+                <ul>
+                	<li>Link</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                </ul>
+                
+            </div>
+            <div id="footer-2" class="footer-box">
+            <h4>Tools</h4>
+                <ul>
+                	<li>Link</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                </ul>
+            <h4>Help</h4>
+                <ul>
+                	<li>Link</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                </ul>
+            </div>
+            <div id="footer-3" class="footer-box last">
+            <h4>About Us</h4>
+            <ul>
+                	<li>About Us</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                </ul>
+            <h4>Sociable</h4>
+            <ul>
+                	<li>Twitter</li>
+                    <li>Link</li>
+                    <li>Link</li>
+                </ul>
+               
+            </div>	
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends "dojango/base.html" %}
+
+{% block dojango_header_extra %}
+
+	<script type="text/javascript">
+		function userFormSubmit(){
+			var form = dojo.byId("searchForm");
+			var resultsOut = dojo.byId("results");
+
+			resultsOut.innerHTML = "...Waiting..."
+
+			dojo.xhrPost({url:form.action,
+				handleAs: "json",
+				content:{q:form.q.value
+				},
+				load:function(response, ioArgs){
+					if (response.success) {
+						if (response.results.length > 0 ) {
+							resultsOut.innerHTML = ""
+							for (item in response.results) {
+								data = "<a href=\"" + response.results[item].url + "\">" + response.results[item].title + "</a><br />"
+								resultsOut.innerHTML = resultsOut.innerHTML + data;
+							}
+						} else {
+							
+					} else {
+						dojo.byId("results").innerHTML = "Error: " + response.error;
+					}
+				}
+			});
+		}
+	</script>
+
+
+{% endblock %}
+
+{% block dojango_content %}
+	{% if error %}
+		<p style="color: red;">Please submit a search term.</p>
+	{% endif %}
+	<form id="searchForm" onsubmit="userFormSubmit(); return false;" action="/simple-search/">
+		<input type="text" id="q" name="q">
+		<input type="submit" value="Search">
+	</form>
+
+	<div id="results"></div>
+
+{% endblock %}
