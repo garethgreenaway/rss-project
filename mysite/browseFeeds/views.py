@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
 
+from django.contrib.auth.models import User
+
 from mysite.browseFeeds.models import FeedItem, UserFeed, UserInbox, FeedStaging, Feed, Category, UserProfile
 from mysite.browseFeeds.forms import AddFeedForm, AddCategoryForm, SubscribeFeedForm, ShareStoryForm
 from mysite.tasks import task_addFeed, task_addCategory
@@ -46,9 +48,11 @@ def index(request, feed_uuid = None, story_uuid = None):
     mcategories = []
 
     if request.user.username:
-        mcategories = Category.objects.filter(user__username__exact=request.user.username).order_by('name')
-        feeds = UserFeed.objects.filter(username__username__exact=request.user.username)
-        uncatagorized_feeds = UserFeed.objects.filter(username=request.user, category = None).order_by("feed__name")
+
+        user = User.objects.filter(username__exact=request.user.username)[0]
+        profile = user.profile
+        mcategories = profile.categories.order_by('name')
+        feeds = profile.feeds.all()
 
     myFeeds = []
     for feed in feeds:
@@ -56,7 +60,7 @@ def index(request, feed_uuid = None, story_uuid = None):
         
     if feed_uuid:
         site = Feed.objects.filter(site_uuid=feed_uuid)[0]
-        feeditems = FeedItem.objects.filter(site=site).order_by('-addedDate').annotate()[:10]	
+        feeditems = FeedItem.objects.filter(site=site).order_by('-updatedDate').annotate()[:10]	
 
         if site in myFeeds:
             site_subscribed = True
@@ -181,10 +185,12 @@ def addFeed_view(request):
     c = {}
     c.update(csrf(request))
 
-    user = request.user.username
+    username = request.user.username
+    user = User.objects.get(username=username)
+    profile = user.profile
 
     categories = []
-    for c in Category.objects.filter(user__username__exact=request.user.username).order_by('name'):
+    for c in profile.categories.all().order_by('name'):
         categories.append(c.name)
 
     if request.method == 'POST':
@@ -193,7 +199,7 @@ def addFeed_view(request):
             cd = form.cleaned_data
 
             if cd['subscribe']:
-                task_addFeed.delay(FeedStaging(url=cd['url'], user=user, category=cd['category']))
+                task_addFeed.delay(FeedStaging(url=cd['url'], user=username, category=cd['category']))
             else:
                 task_addFeed.delay(FeedStaging(url=cd['url']))
 

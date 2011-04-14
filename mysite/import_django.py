@@ -1,3 +1,4 @@
+import time
 from datetime import timedelta, datetime, tzinfo
 
 #
@@ -33,3 +34,30 @@ class GMT(tzinfo):
 	def tzname(self,dt):
 		return "GMT"
 
+
+def inspect_feeds():
+    for item in Feed.objects.all():
+        print item.name
+        print item.next_update
+        print item.addedDate
+        print item.site_uuid
+        print item.locked
+        print ""
+
+def inspect_feed_items(uuid):
+
+    if not uuid:
+        print "Usage: inspect_feed_items site-uuid"
+
+    else:
+        for item in FeedItem.objects.filter(site__site_uuid__exact=uuid):
+            print item.title
+            print item.updatedDate
+            print item.addedDate
+            print ""
+
+def queue_feeds():
+    for item in Feed.objects.all():
+        item.next_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - 300))
+        item.locked = False
+        item.save()

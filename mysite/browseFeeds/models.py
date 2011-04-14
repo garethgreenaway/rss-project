@@ -16,17 +16,6 @@ def generate_user_id(email):
     m = hashlib.md5()
     m.update(title)
     return m.hexdigest()
-    
-class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
-    uuid = models.CharField(max_length=32, blank=True)
-    birthdate = models.DateField(blank=True, null=True)
-    friends = models.ManyToManyField('self', blank=True)
-
-    def __unicode__(self):
-        return "%s" % (self.user)
-
-User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 class Feed(models.Model):
     name = models.CharField(max_length=100)
@@ -56,15 +45,14 @@ class FeedItem(models.Model):
         return "%s" % (self.title)
 
 class Category(models.Model):
-    user = models.ForeignKey(User)
     name = models.CharField(unique=False, max_length=50)
 
     def __unicode__(self):
         return "%s" % (self.name)
 
 class UserFeed(models.Model):
-    username = models.ForeignKey(User)
     feed = models.ForeignKey(Feed)
+    name = models.CharField(blank=True, unique=False, max_length=50)
     category = models.ForeignKey(Category)
 
     def __unicode__(self):
@@ -77,13 +65,6 @@ class UserInbox(models.Model):
     def __unicode__(self):
         return "%s" % (self.username)
 
-class Person(models.Model):
-    user = models.ForeignKey(User)
-    friends = models.ManyToManyField('self', blank=True)
-
-    def __unicode__(self):
-    	return self.user.username
-
 class FeedStaging(models.Model):
     url = models.URLField()
     user = models.CharField(blank=True, max_length=30)
@@ -91,3 +72,17 @@ class FeedStaging(models.Model):
 
     def __unicode__(self):
         return "%s" % (self.url)
+
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, unique=True)
+    uuid = models.CharField(max_length=32, blank=True)
+    birthdate = models.DateField(blank=True, null=True)
+    friends = models.ManyToManyField('self', blank=True)
+    feeds = models.ManyToManyField(UserFeed, blank=True)
+    categories = models.ManyToManyField(Category, blank=True)
+
+    def __unicode__(self):
+        return "%s" % (self.user)
+
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+

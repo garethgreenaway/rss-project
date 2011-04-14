@@ -55,13 +55,14 @@ def generate_uuid(title):
 def task_addCategory(user, category):
 
     user = User.objects.get(username=user)
+    profile = user.profile
 
-    if Category.objects.filter(user=user, name=category):
+    if profile.categories.filter(name=category):
         # Category already exists, ignore the request
         pass
     else:
-        category = Category.objects.create(user=user, name=category)
-        category.save()
+        category = Category.objects.create(name=category)
+        profile.categories.add(category)
 
     return
 
@@ -73,22 +74,11 @@ def task_addFeed(item):
 
     url = item.url
     user = User.objects.get(username=item.user)
+    profile = user.profile
 
-    #if len(item.user) > 0:
-    #    user = User.objects.get(username=item.user)
-    #
-    #    if len(item.category) > 0:
-    #        if Tag.objects.filter(user=user, tag_name=item.tag):
-    #            tag = Tag.objects.get(user=user, tag_name = item.tag)
-    #        else:
-    #            tag = Tag.objects.create(user=user, tag_name=item.tag)
-    #    else:
-    #        tag = None
-    #else:
-    #    user = None
-    #    tag = None
-
-    category = Category.objects.get(user=user, name=item.category)
+    #category = Category.objects.get(user=user, name=item.category)
+    # Should probably check to make sure it existts first.
+    category = profile.categories.get(name=item.category)
 
     if not Feed.objects.filter(url__exact=url):
 	
@@ -125,14 +115,15 @@ def task_addFeed(item):
         #
 
         if user:
-            subscribedFeeds_query = UserFeed.objects.filter(username=user, feed=f)
+            #subscribedFeeds_query = UserFeed.objects.filter(username=user, feed=f)
+            subscribedFeeds_query = profile.feeds.filter(feed=f)
 
             if not subscribedFeeds_query:
                 print "Subscribing %s to %s with category %s" % (user.username, siteName, category.name)
-                uf = UserFeed.objects.create(username=user, feed=f, category=category)
+                uf = UserFeed.objects.create(feed=f, category=category)
+                profile.feeds.add(uf)
 
-                f.subscribers += 1
-                f.save()
+                #f.save()
 
     else:
         if user:
@@ -144,6 +135,7 @@ def task_addFeed(item):
             if not subscribedFeeds_query:
                     print "Subscribing %s to %s with tag %s" % (user.username, siteName, category.name)
                     uf = UserFeed.objects.create(username=user, feed=f, category=category)
+                    profile.feeds.add(uf)
 
     connection.close()
     return
@@ -151,68 +143,67 @@ def task_addFeed(item):
 @task(ignore_result=True)
 def grabStories(url):
 
-	logger = grabStories.get_logger()
+    logger = grabStories.get_logger()
 
-	d = feedparser.parse(url)
+    d = feedparser.parse(url)
 
-	#
-	# UUID for the website we're pulling the feed from
-	#
-	site_uuid = generate_uuid(url)
+    #
+    # UUID for the website we're pulling the feed from
+    #
+    site_uuid = generate_uuid(url)
 
-	site = Feed.objects.filter(site_uuid__exact=site_uuid)[0]
+    if len(Feed.objects.filter(site_uuid__exact=site_uuid)) > 0:
+        site = Feed.objects.filter(site_uuid__exact=site_uuid)[0]
+    else:
+        # Feed wasn't available so we put it back on the queue and retry.
+        logger.info("Feed not available, requeued.")
+        grab_stories.retry(exc=exc)
 
-	stories = []
+    logger.info("%d entries found." % (len(d.entries)))
 
-	logger.info("%d entries found." % (e.title))
+    for e in d.entries:
 
-	for i in range(0, len(d.entries)):
+        story_uuid = generate_uuid(e.link)
+        story_title = e.title
 
-		e = d.entries[i]
+        logger.info("Checking %s - %s" % (story_title, story_uuid))
 
-		#
-		# UUID for the Url to the story
-		#
-		story_uuid = generate_uuid(e.link)
-		story_title = e.title
+        if FeedItem.objects.filter(story_uuid__exact=story_uuid):
+            print "Story found - %s" % (story_title)
+        
+        else:
+            print "Not Found - %s" % (story_title)
 
-		if getattr(e, 'summary', False):
-			summary = e.summary
-		elif getattr(e, 'subtitle', False):
-			summary = e.subtitle
-		else:
-			pass
+            if getattr(e, 'summary', False):
+                summary = e.summary
+            elif getattr(e, 'subtitle', False):
+                summary = e.subtitle
+            else:
+                pass
 
-		now = time.time()
+            now = time.time()
 
-		if hasattr(e, "updated"):
-			#
-			# Noticed a few feed items with invalid dates.
-			#
-			e.updated = re.sub(" 24:", " 00:", e.updated)
-	
-			addedDate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
-			updatedDate = dateutil.parser.parse(e.updated, ignoretz=True).strftime("%Y-%m-%d %H:%M:%S")
+            if hasattr(e, "updated"):
+                #
+                # Noticed a few feed items with invalid dates.
+                #
+                e.updated = re.sub(" 24:", " 00:", e.updated)
+            
+                addedDate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
+                updatedDate = dateutil.parser.parse(e.updated, ignoretz=True).strftime("%Y-%m-%d %H:%M:%S")
+            
+            else:
+                addedDate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
+                updatedDate = addedDate
 
-		else:
-			addedDate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
-			updatedDate = addedDate
+            logger.info("Adding %s" % (e.title))
 
-		if not FeedItem.objects.filter(story_uuid__exact=story_uuid):
+            try:
+                f = FeedItem(site=site, title=story_title, story_uuid=story_uuid, url=e.link, updatedDate=updatedDate, addedDate=addedDate, summary=summary)
+                f.save()
+            except:
+                logger.info("Something went wrong, Skipping %s" % (e.title))
 
-			logger.info("Adding %s" % (e.title))
-
-			try:
-				f = FeedItem(site=site, title=story_title, story_uuid=story_uuid, url=e.link, updatedDate=updatedDate, addedDate=addedDate, summary=summary)
-				f.save()
-			except:
-				logger.info("Something went wrong, Skipping %s" % (e.title))
-
-
-		else:		
-
-			logger.info("%s already exists." % (e.title))
-	
 	#
 	# Schedule the next feed update
 	#
@@ -223,11 +214,3 @@ def grabStories(url):
 	site.locked = False
 	site.save()
 	logger.info("Updating next refresh to %s" % (nextUpdate))
-	
-	#
-	# Close the connection to the database
-	#
-	connection.close()
-	return
-
-
