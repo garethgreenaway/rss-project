@@ -8,7 +8,7 @@ import settings
 setup_environ(settings)
 
 # Celery
-from StagingFeedDaemon import addFeed
+from tasks import task_addFeed
 
 from django.db import connection
 from browseFeeds.models import FeedStaging, Feed
@@ -56,12 +56,12 @@ for o, a in opts:
 for url in urls:
 	print "Adding %s" % (url)
 	if user and not tag:
-		addFeed.delay(FeedStaging(url=url,user=user))
+		task_addFeed.delay(FeedStaging(url=url,user=user))
 
 	elif user and tag:
-		addFeed.delay(FeedStaging(url=url,user=user,tag=tag))
+		task_addFeed.delay(FeedStaging(url=url,user=user,tag=tag))
 
 	else:
-		addFeed.delay(FeedStaging(url=url))
+		task_addFeed.delay(FeedStaging(url=url))
 
 

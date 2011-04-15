@@ -10,8 +10,9 @@
             {{ form.non_field_errors }}
 
             <div class="fieldWrapper">
-            {{ form.subject.errors }}
-            <label for="id_url">{{ feed_name }}</label>
+                {{ form.subject.errors }}
+                <label for="id_feed_name">Name: </label>
+			    {{ form.feed_name }}
             </div>
 
             <div style="display:block;" class="fieldWrapper">

@@ -161,10 +161,10 @@
 					<div class="title">
                         <span>My Feeds</span>
 			            <span id="addFeed" style="float: right;">
-                            <a class="iframe-pop" style="color: #fff;" href="/feed/add">Add Feed</a>
+                            <a class="iframe-pop" style="color: #fff;" href="/feed/add"><img src="/images/gtk-add.png" border=0></a>
                         </span>
 			            <span id="addCategory" style="float: right;">
-                            <a class="iframe-pop" style="color: #fff;" href="/category/add">Add Category</a>
+                            <a class="iframe-pop" style="color: #fff;" href="/category/add"><img src="/images/gtk-copy.png" border=0></a>
                         </span>
                     </div>
 			        <!-- Add Feed Form -->
@@ -271,7 +271,11 @@
                     {% if site_subscribed %}
                     <span style="float: right;"><a class="iframe-pop" style="color: #fff;" href="/feed/edit/{{ site.site_uuid }}/">Edit</a></span>
                     {% else %}
-                    <span style="float: right;"><a class="iframe-pop" style="color: #fff;" href="/feed/subscribe/{{ site.site_uuid }}/">Subscribe</a></span>
+		                {% if request.user.is_authenticated %}
+                            <span style="float: right;">
+                            <a class="iframe-pop" style="color: #fff;" href="/feed/subscribe/{{ site.site_uuid }}/">Subscribe</a>
+                            </span>
+                        {% endif %}
                     {% endif %}
             </div>
             {% else %}

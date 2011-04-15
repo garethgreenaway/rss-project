@@ -67,12 +67,14 @@ if not User.objects.filter(username__exact=username):
     user = User.objects.create_user(username, email, password)
     user.save()
 
-    category = Category.objects.create(user=user, name="Uncategorized")
-    category.save()
 
 else:
     user = User.objects.filter(username__exact=username)[0]
 
 profile = user.profile
 profile.user_uuid = generate_uuid(email)
+
+category = Category.objects.create(name="Uncategorized")
+profile.categories.add(category)
+
 profile.save()

@@ -37,11 +37,7 @@ class GMT(tzinfo):
 
 def inspect_feeds():
     for item in Feed.objects.all():
-        print item.name
-        print item.next_update
-        print item.addedDate
-        print item.site_uuid
-        print item.locked
+        print item.name, item.next_update, item.addedDate, item.site_uuid, item.locked
         print ""
 
 def inspect_feed_items(uuid):
@@ -51,13 +47,26 @@ def inspect_feed_items(uuid):
 
     else:
         for item in FeedItem.objects.filter(site__site_uuid__exact=uuid):
-            print item.title
-            print item.updatedDate
-            print item.addedDate
+            print item.title, item.updatedDate, item.addedDate
             print ""
+
+def unlock_feeds():
+    for item in Feed.objects.all():
+        item.locked = False
+        item.save()
 
 def queue_feeds():
     for item in Feed.objects.all():
         item.next_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - 300))
         item.locked = False
         item.save()
+
+def queue_feed(uuid):
+    item = Feed.objects.get(site_uuid=uuid)
+    item.next_update = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() - 300))
+    item.locked = False
+    item.save()
+
+
+
+

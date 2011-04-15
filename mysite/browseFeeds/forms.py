@@ -10,10 +10,11 @@ class AddFeedForm(forms.Form):
         self.fields['category'].choices = [[x,x] for x in categories]
 
 class EditFeedForm(forms.Form):
+    feed_name = forms.CharField()
     category = forms.ChoiceField()
 
     def __init__(self, categories, *args, **kwargs): 
-        super(AddFeedForm, self).__init__(*args, **kwargs)
+        super(EditFeedForm, self).__init__(*args, **kwargs)
         self.fields['category'].choices = [[x,x] for x in categories]
 
 class AddCategoryForm(forms.Form):
@@ -21,7 +22,6 @@ class AddCategoryForm(forms.Form):
 
 class SubscribeFeedForm(forms.Form):
     category_choice = forms.ChoiceField()
-    category_text = forms.ChoiceField()
 
     def __init__(self, categories, *args, **kwargs): 
         super(SubscribeFeedForm, self).__init__(*args, **kwargs)

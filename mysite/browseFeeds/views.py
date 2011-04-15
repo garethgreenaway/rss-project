@@ -14,12 +14,13 @@ from django.forms.formsets import formset_factory
 from django.contrib.auth.models import User
 
 from mysite.browseFeeds.models import FeedItem, UserFeed, UserInbox, FeedStaging, Feed, Category, UserProfile
-from mysite.browseFeeds.forms import AddFeedForm, AddCategoryForm, SubscribeFeedForm, ShareStoryForm
-from mysite.tasks import task_addFeed, task_addCategory
+from mysite.browseFeeds.forms import AddFeedForm, AddCategoryForm, SubscribeFeedForm, ShareStoryForm, EditFeedForm
+from mysite.tasks import task_addFeed, task_addCategory, task_subscribeFeed
 
 from datetime import datetime
 
 import logging
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,7 @@ def index(request, feed_uuid = None, story_uuid = None):
     if story_uuid:
         story = FeedItem.objects.filter(story_uuid=story_uuid)[0]
 
-    recent_feeds = Feed.objects.all().order_by("-addedDate")[:8]
+    recent_feeds = Feed.objects.all().order_by("-addedDate")
     popular_feeds = Feed.objects.all().order_by("-subscribers")[:8]
 
     for category in mcategories:
@@ -136,17 +137,19 @@ def subscribeFeed_view(request, feed_uuid):
     c = {}
     c.update(csrf(request))
 
-    user = request.user.username
+    username = request.user.username
+    user = User.objects.get(username=username)
+    profile = user.profile
 
     categories = []
-    for c in Category.objects.filter(user__username__exact=request.user.username).order_by('name'):
+    for c in profile.categories.all().order_by('name'):
         categories.append(c.name)
 
     if request.method == 'POST':
         form = SubscribeFeedForm(categories, request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            task_addFeed.delay(FeedStaging(url=cd['url'], user=user, category=cd['category']))
+            task_subscribeFeed.delay(user=user, feed_uuid=feed_uuid, category_name=cd['category_choice'])
             return HttpResponseRedirect('/feed/thanks')
     else:
         form = SubscribeFeedForm(categories, initial={'category': 'Uncategorized'})
@@ -159,12 +162,15 @@ def editFeed_view(request, feed_uuid):
     c = {}
     c.update(csrf(request))
 
-    user = request.user.username
+    username = request.user.username
+    user = User.objects.get(username=username)
+    profile = user.profile
 
-    userFeed = UserFeed.objects.filter(feed__site_uuid__exact=feed_uuid).filter(username__username__exact=user)[0]
+    userFeed = profile.feeds.filter(feed__site_uuid__exact=feed_uuid)[0]
+    feed_name = userFeed.feed.name
 
     categories = []
-    for c in Category.objects.filter(user__username__exact=request.user.username).order_by('name'):
+    for c in profile.categories.all().order_by('name'):
         categories.append(c.name)
 
     if request.method == 'POST':
@@ -174,10 +180,10 @@ def editFeed_view(request, feed_uuid):
 
             return HttpResponseRedirect('/feed/thanks')
     else:
+        initial_data = {'category': userFeed.category.name, 'feed_name': feed_name}
+        form = EditFeedForm(categories, initial=initial_data)
 
-        form = AddFeedForm(categories, initial={'category': userFeed.category.name})
-
-    return render_to_response('editfeed.html', {'form': form}, context_instance=RequestContext(request))
+    return render_to_response('editfeed.html', locals(), context_instance=RequestContext(request))
 
 @login_required
 def addFeed_view(request):

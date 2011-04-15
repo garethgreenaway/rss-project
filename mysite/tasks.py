@@ -52,6 +52,18 @@ def generate_uuid(title):
     return m.hexdigest()
 
 @task(ignore_result=True)
+def task_subscribeFeed(user, feed_uuid, category_name):
+
+    user = User.objects.get(username=user)
+    profile = user.profile
+
+    category = profile.categories.get(name=category_name)
+
+    feed = Feed.objects.get(site_uuid__exact=feed_uuid)
+    uf = UserFeed.objects.create(feed=feed, category=category)
+    profile.feeds.add(uf)
+
+@task(ignore_result=True)
 def task_addCategory(user, category):
 
     user = User.objects.get(username=user)
@@ -73,12 +85,15 @@ def task_addFeed(item):
     print item
 
     url = item.url
-    user = User.objects.get(username=item.user)
-    profile = user.profile
+    if item.user:
+        user = User.objects.get(username=item.user)
+        profile = user.profile
 
-    #category = Category.objects.get(user=user, name=item.category)
-    # Should probably check to make sure it existts first.
-    category = profile.categories.get(name=item.category)
+        #category = Category.objects.get(user=user, name=item.category)
+        # Should probably check to make sure it existts first.
+        category = profile.categories.get(name=item.category)
+    else:
+        user = None
 
     if not Feed.objects.filter(url__exact=url):
 	
@@ -115,7 +130,6 @@ def task_addFeed(item):
         #
 
         if user:
-            #subscribedFeeds_query = UserFeed.objects.filter(username=user, feed=f)
             subscribedFeeds_query = profile.feeds.filter(feed=f)
 
             if not subscribedFeeds_query:
@@ -130,11 +144,11 @@ def task_addFeed(item):
             f = Feed.objects.filter(url__exact=url)[0]
             siteName = f.name
 
-            subscribedFeeds_query = UserFeed.objects.filter(username=user, feed=f)
+            subscribedFeeds_query = profile.feeds.filter(feed=f)
 
             if not subscribedFeeds_query:
                     print "Subscribing %s to %s with tag %s" % (user.username, siteName, category.name)
-                    uf = UserFeed.objects.create(username=user, feed=f, category=category)
+                    uf = UserFeed.objects.create(feed=f, category=category)
                     profile.feeds.add(uf)
 
     connection.close()
@@ -166,12 +180,7 @@ def grabStories(url):
         story_uuid = generate_uuid(e.link)
         story_title = e.title
 
-        logger.info("Checking %s - %s" % (story_title, story_uuid))
-
-        if FeedItem.objects.filter(story_uuid__exact=story_uuid):
-            print "Story found - %s" % (story_title)
-        
-        else:
+        if not FeedItem.objects.filter(story_uuid__exact=story_uuid):
             print "Not Found - %s" % (story_title)
 
             if getattr(e, 'summary', False):
@@ -204,13 +213,14 @@ def grabStories(url):
             except:
                 logger.info("Something went wrong, Skipping %s" % (e.title))
 
-	#
-	# Schedule the next feed update
-	#
-	now = time.time()
-	jitter = random.randint(15,20) * 60
-	nextUpdate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now + jitter))
-	site.next_update = nextUpdate
-	site.locked = False
-	site.save()
-	logger.info("Updating next refresh to %s" % (nextUpdate))
+    #
+    # Schedule the next feed update
+    #
+    now = time.time()
+    jitter = random.randint(15,20) * 60
+    nextUpdate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now + jitter))
+    site.next_update = nextUpdate
+    site.locked = False
+    logger.info("Site %s unlocked" % (site.name))
+    site.save()
+    logger.info("Updating next refresh to %s for site %s" % (nextUpdate, site.name))

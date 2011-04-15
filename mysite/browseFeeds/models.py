@@ -34,7 +34,7 @@ class Feed(models.Model):
 
 class FeedItem(models.Model):
     site = models.ForeignKey(Feed)
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=250)
     story_uuid = models.CharField(unique=True, max_length=50)
     url = models.URLField(max_length=250)
     updatedDate = models.DateTimeField()
@@ -56,7 +56,7 @@ class UserFeed(models.Model):
     category = models.ForeignKey(Category)
 
     def __unicode__(self):
-        return "%s - %s" % (self.username, self.feed.name)
+        return "%s - %s" % (self.feed.name, self.category.name)
 
 class UserInbox(models.Model):
     username = models.ForeignKey(User)
