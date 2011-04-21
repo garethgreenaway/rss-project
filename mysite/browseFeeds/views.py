@@ -19,6 +19,8 @@ from mysite.tasks import task_addFeed, task_addCategory, task_subscribeFeed
 
 from datetime import datetime
 
+import facebook.djangofb as facebook
+
 import logging
 import random
 
@@ -348,9 +350,37 @@ def site_register(request):
     c = {}
     c.update(csrf(request))
 
-def show_feed(request, feed):
+def add_fb_instance(request):
+    # if already has a facebook instance, immediately return
+    if getattr(request, 'facebook', None) is not None:
+     return request
+    # auth_token is other important possible param
+    api_key = settings.FACEBOOK_API_KEY
+    secret_key = settings.FACEBOOK_SECRET_KEY
+    app_name = getattr(settings, 'FACEBOOK_APP_NAME', None)
+    callback_path = getattr(settings, 'FACEBOOK_CALLBACK_PATH', None)
+    internal = getattr(settings, 'FACEBOOK_INTERNAL', True)
+    request.facebook = facebook.Facebook(
+        api_key=api_key,
+        secret_key=secret_key,
+        app_name=app_name,
+        callback_path=callback_path,
+        internal=internal
+    )
 
-    site = Feed.objects.filter(site_uuid=feed)[0]
-    feeditems = FeedItem.objects.filter(site=site).order_by('-addedDate').annotate()[:10]	
+def require_fb_login(request, next=None):
+    if getattr(request, 'facebook', None) is None:
+        add_fb_instance(request)
+    fb = request.facebook
+    if not fb.check_session(request):
+        return fb.redirect(fb.get_login_url(next=next))
 
-    return render_to_response('showfeed.html', locals(), context_instance=RequestContext(request))
+def test_facebook(request):
+    add_fb_instance(request)
+    redirect = require_fb_login(request)
+
+    if redirect is not None: return redirect
+
+    user = get_fb_user(request.facebook)
+
+
