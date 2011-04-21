@@ -175,5 +175,8 @@ BROKER_USER = "myuser"
 BROKER_PASSWORD = "mypassword"
 BROKER_VHOST = "myvhost"
 
+FACEBOOK_API_KEY = "92eb0ccc831695a141b957ad0a61f535"
+FACEBOOK_SECRET_KEY = "44d555ac2653ed7233ab6ab0da9c4f8f"
+
 import djcelery
 djcelery.setup_loader()

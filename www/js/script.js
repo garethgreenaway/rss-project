@@ -9,10 +9,8 @@ $('a.iframe-pop').fancybox({
 });
 
 $('#add-feed-form').submit(function() {
-
     $.fancybox.close();
     return false;
-
 });
 
 $('a.iframe-story-pop').click(function () {
@@ -47,6 +45,17 @@ $('a.iframe-story-pop').click(function () {
 
 });
 
+$('a.account-menu').click(function(){
+    
+    var account_hidden_div=document.getElementById('account-hidden-div');
+    var account=document.getElementById('account');
+
+	$(account_hidden_div).slideToggle('fast', function() {});
+
+    return false;
+
+});
+
 
 $('a.close-pop').click(function(){
 	$.fancybox.close();
@@ -68,4 +77,4 @@ $("a.category").click(function () {
         $.cookie(name, "open", {path: '/'}); 
      }
 });
-		
+

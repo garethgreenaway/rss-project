@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     (r'^feed/site/(?P<feed_uuid>\w+)/(?P<story_uuid>\w+)/$', 'mysite.browseFeeds.views.index'),
     (r'^category/add/$', 'mysite.browseFeeds.views.addCategory_view'),
     (r'^category/submitted/$', 'mysite.browseFeeds.views.categorySubmitted'),
+    (r'^fb-test/$', 'mysite.browseFeeds.views.test_facebook'),
     (r'^accounts/', include('registration.urls')),
 )
 
