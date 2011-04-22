@@ -44,7 +44,9 @@
 
 <body>
 	<div id="header" class="container_12">
-		<div id="intro-links" class="grid_4 prefix_8">
+        <div id="intro-links-container" class="grid_4 prefix_8">
+        {% include "menu/logged-in.html" %}
+		<div id="intro-links">
 		    {% if request.user.is_authenticated %}
 			<div id="welcome" class="intro-link">Welcome {{user.username }}</div>
 		    {% else %}
@@ -66,14 +68,15 @@
 				</div>
 			</div>
 
-			<div id="account" class="intro-link"><a class="account-menu" href="/#account-form">Account</a></div>
-			<div id="account-hidden-div" style="display:none; border:1px;">
+			<div id="account-menu-item" class="intro-link" style="border: none;"><a class="account-menu" href="/#account-form">Account</a>
+			<div id="account-hidden-div" style="display:block; border:1px;">
 				<div id="account-menu">
-                       <ul class="menu">
-                       <li><a href="#">Friends</a></li>
+                       <ul class="account-menu-list dropdown_1column">
+                            <li><a href="#">Friends</a></li>
                        </ul>
 				</div><!-- / register-form -->
 			</div>
+            </div>
 
 		    {% else %}
 			<div id="login" class="intro-link"><a class="inline-pop" href="#login-form">Login</a>
@@ -99,7 +102,7 @@
 				</div>
 			</div>
 
-			<div id="register" class="intro-link"><a class="iframe-pop" href="/accounts/register">Register</a>
+			<div id="register" class="intro-link" style="border: none;"><a class="iframe-pop" href="/accounts/register">Register</a>
 				<div style="display:none;">
 					<div id="register-form">
 						<form action="">
@@ -121,6 +124,7 @@
 			</div>
             {% endif %}
 
+		</div>
 		</div><!--/intro-links -->
 
 		<div id="header-container">

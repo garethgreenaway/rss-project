@@ -40,6 +40,7 @@ if settings.DEBUG:
         (r'^images/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/images'}),
         (r'^js/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/js'}),
         (r'^css/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/css'}),
+        (r'^test/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/test'}),
         (r'^robots\.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain"))
     )
 

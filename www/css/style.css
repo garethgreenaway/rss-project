@@ -224,11 +224,37 @@ button {  width: auto; overflow: visible; }
  /* Primary Styles
     Author: John Quinones
  */
-#intro-links{
-	height:20px;
-	background:transparent url(images/intro-link-bg.png) center right no-repeat;
+#intro-links-container{
+	height:30px;
 	text-align:center;
 }
+#intro-links{
+	height:20px;
+    width:250px;
+	/* background:transparent url(images/intro-link-bg.png) center right no-repeat; */
+
+     /* Rounded Corners */  
+   
+     -moz-border-radius: 10px;  
+     -webkit-border-radius: 10px;  
+     border-radius: 10px;  
+   
+     /* Background color and gradients */  
+   
+     background: #fff;  
+   
+     /* Borders */  
+   
+     border: 1px solid #ccc;  
+   
+     -moz-box-shadow:inset 0px 0px 1px #edf9ff;  
+     -webkit-box-shadow:inset 0px 0px 1px #edf9ff;  
+     box-shadow:inset 0px 0px 1px #edf9ff;  
+
+	text-align:center;
+    float: right;
+}
+
 #intro-links .intro-link{
 	width:auto;
 	float:left;
