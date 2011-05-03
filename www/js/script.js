@@ -70,11 +70,11 @@ $("a.category").click(function () {
 
      $(this).toggleClass("open");
      var name = $(this)[0].getAttribute("name");
-     name = name.replace(/\s/g, "");
+     var cookie_name = name.replace(/\s/g, "");
 
-     console.log(name);
+     /* console.log(cookie_name); */
 
-     if ($.cookie(name) == "open") {
+     if ($.cookie(cookie_name) == "open") {
         $.cookie(name, "close", {path: '/'}); 
      } else {
         $.cookie(name, "open", {path: '/'}); 
