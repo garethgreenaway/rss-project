@@ -19,8 +19,6 @@ from mysite.tasks import task_addFeed, task_addCategory, task_subscribeFeed
 
 from datetime import datetime
 
-import facebook.djangofb as facebook
-
 import logging
 import random
 
@@ -73,7 +71,7 @@ def index(request, feed_uuid = None, story_uuid = None):
     if story_uuid:
         story = FeedItem.objects.filter(story_uuid=story_uuid)[0]
 
-    recent_feeds = Feed.objects.all().order_by("-addedDate")
+    recent_feeds = Feed.objects.all().order_by("-next_update")[:8]
     popular_feeds = Feed.objects.all().order_by("-subscribers")[:8]
 
     for category in mcategories:
@@ -250,14 +248,14 @@ def feedThanks(request):
 	
 def search(request):
 	error = False
-	if 'q' in request.GET:
-		q = request.GET['q']
-		if not q:
+	if 'search' in request.GET:
+		search = request.GET['search']
+		if not search:
 			error = True
 		else:
-			news = FeedItem.objects.filter(title__icontains=q).order_by('-updatedDate')
+			news = FeedItem.objects.filter(title__icontains=search).order_by('-updatedDate')
 			return render_to_response('search_results.html',
-				{'news': news, 'query': q})
+				{'news': news, 'query': search})
 
 	return render_to_response('search_form.html', {'error': error})
 
@@ -349,38 +347,3 @@ def site_register(request):
 
     c = {}
     c.update(csrf(request))
-
-def add_fb_instance(request):
-    # if already has a facebook instance, immediately return
-    if getattr(request, 'facebook', None) is not None:
-     return request
-    # auth_token is other important possible param
-    api_key = settings.FACEBOOK_API_KEY
-    secret_key = settings.FACEBOOK_SECRET_KEY
-    app_name = getattr(settings, 'FACEBOOK_APP_NAME', None)
-    callback_path = getattr(settings, 'FACEBOOK_CALLBACK_PATH', None)
-    internal = getattr(settings, 'FACEBOOK_INTERNAL', True)
-    request.facebook = facebook.Facebook(
-        api_key=api_key,
-        secret_key=secret_key,
-        app_name=app_name,
-        callback_path=callback_path,
-        internal=internal
-    )
-
-def require_fb_login(request, next=None):
-    if getattr(request, 'facebook', None) is None:
-        add_fb_instance(request)
-    fb = request.facebook
-    if not fb.check_session(request):
-        return fb.redirect(fb.get_login_url(next=next))
-
-def test_facebook(request):
-    add_fb_instance(request)
-    redirect = require_fb_login(request)
-
-    if redirect is not None: return redirect
-
-    user = get_fb_user(request.facebook)
-
-
