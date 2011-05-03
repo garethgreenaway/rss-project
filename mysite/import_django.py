@@ -10,6 +10,8 @@ setup_environ(settings)
 
 from django.db import connection
 from browseFeeds.models import FeedItem, UserFeed, UserInbox, FeedStaging, Feed, Category, UserProfile
+from la_facebook.models import UserAssociation
+
 from django.contrib.auth.models import User
 
 class GMT(tzinfo):
