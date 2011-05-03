@@ -9,6 +9,7 @@
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
+
   <meta charset="utf-8">
 
   <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
@@ -45,7 +46,7 @@
 <body>
 	<div id="header" class="container_12">
         <div id="intro-links-container" class="grid_4 prefix_8">
-        {% include "menu/logged-in.html" %}
+        {# {% include "menu/logged-in.html" %} #}
 		<div id="intro-links">
 		    {% if request.user.is_authenticated %}
 			<div id="welcome" class="intro-link">Welcome {{user.username }}</div>
@@ -77,6 +78,9 @@
 				</div><!-- / register-form -->
 			</div>
             </div>
+
+            <p><a class="iframe-pop" href="{% url la_facebook_login %}?next={{ next }}">FaceBook</a></p>
+            {{ profile.name }}
 
 		    {% else %}
 			<div id="login" class="intro-link"><a class="inline-pop" href="#login-form">Login</a>
@@ -132,7 +136,7 @@
 				<a href="/"><img src="/images/punq-logo.png" /></a>
 			</div><!-- /logo -->
 			<div id="search" class="grid_5">
-				<form><input class="search-box" name="search" tabindex="1" value type="text" title="search"><button class="search-btn" tabindex="2">Search Feeds</button>
+				<form action="/search"><input class="search-box" name="search" tabindex="1" value type="text" title="search"><button class="search-btn" tabindex="2">Search Feeds</button>
 			</div><!-- /search -->
 			<div id="header-links" class="grid_5">
 				<ul>
@@ -199,10 +203,10 @@
 			            {% endfor %}
 
                         {% if request.COOKIES|dictlookup:"recent-feeds" == "open" %}
-						<li class="moveable"><a class="category open" name="recent-feeds">Recently Added</a>
+						<li class="moveable"><a class="category open" name="recent-feeds">Recently Updated</a>
                         <ul style="display:block;" class="category-feeds" >
                         {% else %}
-						<li class="moveable"><a class="category" name="recent-feeds">Recently Added</a>
+						<li class="moveable"><a class="category" name="recent-feeds">Recently Updated</a>
                         <ul style="display:none;" class="category-feeds" >
                         {% endif %}
 
