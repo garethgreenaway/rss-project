@@ -4,6 +4,8 @@ from django.conf import settings
 
 from django.http import HttpResponse
 
+from django.views.generic.simple import direct_to_template
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -29,8 +31,9 @@ urlpatterns = patterns('',
     (r'^feed/site/(?P<feed_uuid>\w+)/(?P<story_uuid>\w+)/$', 'mysite.browseFeeds.views.index'),
     (r'^category/add/$', 'mysite.browseFeeds.views.addCategory_view'),
     (r'^category/submitted/$', 'mysite.browseFeeds.views.categorySubmitted'),
-    (r'^fb-test/$', 'mysite.browseFeeds.views.test_facebook'),
+    (r'^facebook_debug/', direct_to_template, {'template':'facebook_debug.html'}),  
     (r'^accounts/', include('registration.urls')),
+    url(r"^la_facebook/", include("la_facebook.urls")),
 )
 
 
