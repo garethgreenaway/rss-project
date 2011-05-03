@@ -97,6 +97,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'djcelery',
     'registration',
+    'la_facebook',
     'mysite.browseFeeds'
 )
 
@@ -175,8 +176,16 @@ BROKER_USER = "myuser"
 BROKER_PASSWORD = "mypassword"
 BROKER_VHOST = "myvhost"
 
-FACEBOOK_API_KEY = "92eb0ccc831695a141b957ad0a61f535"
-FACEBOOK_SECRET_KEY = "44d555ac2653ed7233ab6ab0da9c4f8f"
+#FACEBOOK_API_KEY = "92eb0ccc831695a141b957ad0a61f535"
+
+FACEBOOK_ACCESS_SETTINGS = {
+    "FACEBOOK_APP_ID": "149489075118693",
+    "FACEBOOK_APP_SECRET": "44d555ac2653ed7233ab6ab0da9c4f8f",
+    "LOG_LEVEL": "DEBUG",
+    "LOG_FILE": "/tmp/la_facebook.log",
+}
+
+LOGIN_REDIRECT_URL="/"
 
 import djcelery
 djcelery.setup_loader()
