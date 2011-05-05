@@ -73,11 +73,20 @@ class FeedStaging(models.Model):
     def __unicode__(self):
         return "%s" % (self.url)
 
+class FacebookFriend(models.Model):
+    facebook_id = models.CharField(unique=True, max_length=50)
+    first_name = models.CharField(unique=False, max_length=50)
+    last_name = models.CharField(unique=False, max_length=50)
+
+    def __unicode__(self):
+        return "%s %s" % (self.first_name, self.last_name)
+    
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     uuid = models.CharField(max_length=32, blank=True)
     birthdate = models.DateField(blank=True, null=True)
     friends = models.ManyToManyField('self', blank=True)
+    facebook_friends = models.ManyToManyField(FacebookFriend, blank=True)
     feeds = models.ManyToManyField(UserFeed, blank=True)
     categories = models.ManyToManyField(Category, blank=True)
 

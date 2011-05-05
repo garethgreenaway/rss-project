@@ -9,7 +9,7 @@ import settings
 setup_environ(settings)
 
 from django.db import connection
-from browseFeeds.models import FeedItem, UserFeed, UserInbox, FeedStaging, Feed, Category, UserProfile
+from browseFeeds.models import FeedItem, UserFeed, UserInbox, FeedStaging, Feed, Category, UserProfile, FacebookFriend
 from la_facebook.models import UserAssociation
 
 from django.contrib.auth.models import User

@@ -1,0 +1,540 @@
+{% load my_filters %}
+{% load assign_node %}
+<!doctype html>  
+
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ --> 
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+
+  <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame 
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Punq</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+  <!-- CSS : implied media="all" -->
+  <link rel="stylesheet" href="/css/style.css?v=2">
+  <link rel="stylesheet"  media="screen and (min-device-width: 1025px)" href="/css/fluid.css?v=2">
+  <link rel="stylesheet" media="screen and (max-width: 1024px)" href="/css/fixed.css?v=2">
+  <link rel="stylesheet" href="/css/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="/css/menu.css" type="text/css" media="screen" />
+
+  <!-- Uncomment if you are specifically targeting less enabled mobile browsers
+  <link rel="stylesheet" media="handheld" href="css/handheld.css?v=2">  -->
+ 
+  <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
+  <script src="/js/libs/modernizr-1.6.min.js"></script>
+
+</head>
+
+<body>
+	<div id="header" class="container_12">
+        <div id="intro-links-container" class="grid_4 prefix_8">
+        {# {% include "menu/logged-in.html" %} #}
+		<div id="intro-links">
+		    {% if request.user.is_authenticated %}
+			<div id="welcome" class="intro-link">Welcome {{user.username }}</div>
+		    {% else %}
+			<div id="welcome" class="intro-link">Welcome Guest</div>
+            {% endif %}
+
+		    {% if request.user.is_authenticated %}
+			<div id="logout" class="intro-link"><a class="inline-pop" href="#logout-form">Log Out</a>
+			<!-- Register Login Form -->
+				<div style="display:none;">
+					<div id="logout-form">
+						<form action="/accounts/logout/" method="post">{% csrf_token %}
+                            <p>This will log you out.</p>
+							<button type="submit" name="confirm">Confirm</button>
+							<div id="login-cancel"><a class="close-pop">Cancel</a></div></p>
+						</form>
+					</div>
+                    <!-- / login-form -->
+				</div>
+			</div>
+
+			<div id="account-menu-item" class="intro-link" style="border: none;"><a class="account-menu" href="/#account-form">Account</a>
+			<div id="account-hidden-div" style="display:block; border:1px;">
+				<div id="account-menu">
+                       <ul class="account-menu-list dropdown_1column">
+                            <li><a href="#">Friends</a></li>
+                       </ul>
+				</div><!-- / register-form -->
+			</div>
+            </div>
+
+            <p><a href="{% url la_facebook_login %}?next={{ next }}">FaceBook</a></p>
+
+		    {% else %}
+			<div id="login" class="intro-link"><a class="inline-pop" href="#login-form">Login</a>
+			<!-- Register Login Form -->
+				<div style="display:none;">
+					<div id="login-form">
+						<form id="login-form" action="/accounts/login/" method="post">{% csrf_token %}
+						<p>
+							<label for="username">Username</label>
+							<input type="text" name="username"></input>
+                        </p>
+						<p>
+							<label for="password">Password</label>
+							<input type="password" name="password"></input>
+                        </p>
+						<p>
+							<button type="submit" name="login">Login</button>
+							<div id="login-cancel"><a class="close-pop">Cancel</a></div>
+                        </p>
+						</form>
+					</div>
+                    <!-- / login-form -->
+				</div>
+			</div>
+
+			<div id="register" class="intro-link" style="border: none;"><a class="iframe-pop" href="/accounts/register">Register</a>
+				<div style="display:none;">
+					<div id="register-form">
+						<form action="">
+						    <p>
+							<label for="name">Name</label>
+							<input type="text" name="name"></input></p>
+						    <p>	
+							<label for="username">Username</label>
+							<input type="text" name="username"></input></p>
+						    <p>	
+							<label for="email">Email</label>
+							<input type="email" name="email"></input></p>
+						    <p>	
+							<button type="submit" name="register">Register</button>
+						<div id="register-cancel"><a class="close-pop">Cancel</a></div></p>
+						</form>
+					</div><!-- / register-form -->
+				</div>
+			</div>
+            {% endif %}
+
+		</div>
+		</div><!--/intro-links -->
+
+		<div id="header-container">
+			<div id="logo" class="grid_2">
+				<a href="/"><img src="/images/punq-logo.png" /></a>
+			</div><!-- /logo -->
+			<div id="search" class="grid_5">
+				<form action="/search"><input class="search-box" name="search" tabindex="1" value type="text" title="search"><button class="search-btn" tabindex="2">Search Feeds</button>
+			</div><!-- /search -->
+			<div id="header-links" class="grid_5">
+				<ul>
+					<li><a href="">Link</a></li>
+					<li><a href="">Link</a></li>
+					<li><a href="">Link</a></li>
+				</ul>
+			</div><!-- /header-links -->
+		</div><!-- /header container -->
+	</div><!-- /header -->
+	
+	<div class="clearfix"></div>
+	
+	<div id="content" class="container_12">
+		<div id="content-container">
+			<div id="my-feeds" class="grid_3">
+				<div id="navigation">
+		            {% if request.user.is_authenticated %}
+					<div class="title">
+                        <span>My Feeds</span>
+			            <span id="addFeed" style="float: right;">
+                            <a class="iframe-pop" style="color: #fff;" href="/feed/add"><img src="/images/gtk-add.png" border=0></a>
+                        </span>
+			            <span id="addCategory" style="float: right;">
+                            <a class="iframe-pop" style="color: #fff;" href="/category/add"><img src="/images/gtk-copy.png" border=0></a>
+                        </span>
+                    </div>
+			        <!-- Add Feed Form -->
+				    <div style="display:none;">
+					    <div id="addfeed-form">
+						    <form action="/feed/add/" method="post">{% csrf_token %}
+                                <p>
+							    <label for="url">URL:</label>
+							    <input type="text" name="url"></input></p>
+                                </p>
+							    <button type="submit" name="add">Add</button>
+							    <div id="login-cancel"><a class="close-pop">Cancel</a></div></p>
+						    </form>
+					    </div>
+				    </div>
+                    <!-- / add-feed-form -->
+			        <!-- </div> -->
+
+			        {% else %}
+					<div class="title">Feeds</div>
+			        {% endif %}
+					<ul>
+		            {% if request.user.is_authenticated %}
+                        {% for item in mycategories %}
+                        {% assign feedname item.category.name %}
+                        {% if request.COOKIES|dictlookup:feedname == "open" %}
+						<li class="moveable"><a class="category open" name="{{ feedname }}">{{ feedname }}</a>
+						<ul style="display:block;" class="category-feeds">
+                        {% else %}
+						<li class="moveable"><a class="category" name="{{ feedname }}">{{ feedname }}</a>
+						<ul style="display:none;" class="category-feeds">
+                        {% endif %}
+			            {% for feed in item.feeds %}
+                            <li>
+				            <a href="/feed/site/{{ feed.feed.site_uuid }}"> {{ feed.feed.name }} </a>
+				            </li>
+			            {% endfor %}
+                        </ul></li>
+			            {% endfor %}
+
+                        {% if request.COOKIES|dictlookup:"recent-feeds" == "open" %}
+						<li class="moveable"><a class="category open" name="recent-feeds">Recently Updated</a>
+                        <ul style="display:block;" class="category-feeds" >
+                        {% else %}
+						<li class="moveable"><a class="category" name="recent-feeds">Recently Updated</a>
+                        <ul style="display:none;" class="category-feeds" >
+                        {% endif %}
+
+			            {% for feed in recent_feeds %}
+								<li><a href="/feed/site/{{ feed.site_uuid }}">{{ feed.name }}</a></li>
+			            {% endfor %}
+						</ul></li>
+
+                        {% if request.COOKIES|dictlookup:"popular-feeds" == "open" %}
+                    	<li class="moveable"><a class="category open" name="popular-feeds">Popular Feeds</a>
+                        <ul style="display:block;" class="category-feeds">
+                        {% else %}
+                    	<li class="moveable"><a class="category" name="popular-feeds">Popular Feeds</a>
+                        <ul style="display:none;" class="category-feeds">
+                        {% endif %}
+
+			            {% for feed in popular_feeds %}
+						<li><a href="/feed/site/{{ feed.site_uuid }}">{{ feed.name }}</a></li>
+			            {% endfor %}
+						</ul></li>
+
+			        {% else %}
+
+                            {% if request.COOKIES|dictlookup:"anonymous-recent-feeds" == "open" %}
+						    <li class="moveable"><a class="category open" name="anonymous-recent-feeds">Recently Added</a>
+                            <ul style="display:block;" class="category-feeds" >
+                            {% else %}
+						    <li class="moveable"><a class="category" name="anonymous-recent-feeds">Recently Added</a>
+                            <ul style="display:none;" class="category-feeds" >
+                            {% endif %}
+
+			                {% for feed in recent_feeds %}
+								<li><a href="/feed/site/{{ feed.site_uuid }}">{{ feed.name }}</a></li>
+			                {% endfor %}
+						    </ul></li>
+
+                            {% if request.COOKIES|dictlookup:"anonymous-popular-feeds" == "open" %}
+                    	    <li class="moveable"><a class="category open" name="anonymous-popular-feeds">Popular Feeds</a>
+                            <ul style="display:block;" class="category-feeds">
+                            {% else %}
+                    	    <li class="moveable"><a class="category" name="anonymous-popular-feeds">Popular Feeds</a>
+                            <ul style="display:none;" class="category-feeds">
+                            {% endif %}
+
+			                {% for feed in popular_feeds %}
+								<li><a href="/feed/site/{{ feed.site_uuid }}">{{ feed.name }}</a></li>
+			                {% endfor %}
+						    </ul></li>
+
+			        {% endif %}
+
+					</ul>
+				</div><!-- /navigation -->
+			</div><!-- /my-feeds -->
+			<div id="feed-items" class="grid_4">
+		    {% if feeditems %}
+			<div class="title">
+                    <span>{{ site.name }}</span>
+                    {% if site_subscribed %}
+                    <span style="float: right;"><a class="iframe-pop" style="color: #fff;" href="/feed/edit/{{ site.site_uuid }}/">Edit</a></span>
+                    {% else %}
+		                {% if request.user.is_authenticated %}
+                            <span style="float: right;">
+                            <a class="iframe-pop" style="color: #fff;" href="/feed/subscribe/{{ site.site_uuid }}/">Subscribe</a>
+                            </span>
+                        {% endif %}
+                    {% endif %}
+            </div>
+            {% else %}
+			<div class="title">Feed Items(Dynamic)</div>
+            {% endif %}
+		    {% if feeditems %}
+			        {% for feeditem in feeditems %}
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" checked /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title">
+                            <h3><a href="/feed/site/{{ site.site_uuid }}/{{ feeditem.story_uuid }}/">{{ feeditem.title }}</a></h3>
+                            </div>
+							<div class="feed-date">
+                                 {{ feeditem.updatedDate|date:"M d" }}<br>
+                                 {{ feeditem.updatedDate|date:"h:m a" }}
+                            </div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">{{ feeditem.summary|striptags|safe }}</div>
+							</div>
+							</div>
+						</div>
+					</div>
+                    {% endfor %}
+            {% else %}
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" checked /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="feed-items">
+						<div id="feed-item-id-row" class="feed-item-row">
+							<div id="feed-item-id-favorite" class="feed-item-favorite">
+								<input type="checkbox" class="feed-check-favorite" /><label></label>
+							</div>
+							<div class="feed-item-content">
+							<div class="feed-title"><h3>The Title of the Feed is way tooo long but I have to test it</h3></div>
+							<div class="feed-date">Feb 3</div>
+							<div class="feed-teaser-container">
+								<div class="feed-teaser">Preview of the feed blah blah blah blah blah blah blah</div>
+							</div>
+							</div>
+						</div>
+					</div>
+            {% endif %}
+			</div><!-- / -->
+
+            {% if story %}
+			<div id="" class="grid_5">
+				<div class="title">
+                        <span>Feed Preview(Dynamic)</span>
+			            <span id="addFeed" style="float: right;">
+                            <a class="iframe-pop" style="color: #fff;" href="/story/share/{{ story.story_uuid }}">Share</a>
+                        </span>
+                </div>
+					<div id="feed-item-id">
+						<div class="feed-item">
+							<div class="feed-preview-title"><h3>{{ story.title }}</h3></div>
+							<div class="feed-preview-date">{{ story.updateDated }}</div>
+							<div class="feed-preview">
+                            {{ story.summary|safe }}
+							</div>
+                            <div>
+                            <a class="iframe-story-pop" href="{{ story.url }}">More</a>
+                            </div>
+						</div>
+					</div>
+			</div><!-- / -->
+
+            {% else %}
+
+			<div id="" class="grid_5">
+				<div class="title">Feed Preview(Dynamic)</div>
+					<div id="feed-item-id">
+						<div class="feed-item">
+							<div class="feed-preview-title"><h3>The Title of the Feed</h3></div>
+							<div class="feed-preview-date">March 26, 2011, 11:11 p.m</div>
+							<div class="feed-preview">
+							<p><img src="http://dummyimage.com/100x150/000/fff&text=Image" align="left" vspace="5" hspace="5" />Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec euismod orci. Morbi ultricies, magna eget consectetur porta, felis nunc congue felis, ut volutpat ante odio non odio. Quisque interdum eros eu nunc semper nec iaculis massa faucibus. Aenean vitae quam diam. Fusce ut consectetur libero. Fusce tincidunt eros nec erat tristique in scelerisque enim iaculis. Mauris congue massa a diam adipiscing tincidunt. Nullam lectus sapien, auctor ac ultricies ut, placerat et elit. Praesent a turpis vel lorem varius adipiscing eu vitae odio. Vestibulum auctor lorem ac nisi mollis eu blandit neque pellentesque. Vivamus nec nunc diam, tincidunt gravida risus. Vivamus fermentum libero ac magna pellentesque tristique. Nullam vestibulum nunc vitae felis porta dignissim. Donec suscipit sapien et justo semper cursus. Suspendisse in tortor eu est interdum euismod. Proin at velit et erat ultricies dignissim et vel nibh. Proin in sapien neque, et porta quam. Nunc sagittis rutrum turpis ac gravida. Ut id neque et turpis volutpat dapibus. Pellentesque diam erat, condimentum non lacinia ac, consectetur vel tortor.<p>
+
+<p>Donec in ligula elit. Sed urna justo, vestibulum vitae fringilla ac, ullamcorper eu dolor. Quisque dolor eros, aliquam sit amet dictum id, lobortis eu turpis. Duis aliquam nisi nec purus lacinia convallis feugiat risus consequat. Ut ullamcorper mi in augue posuere varius. Suspendisse potenti. Suspendisse gravida pulvinar dui, in porttitor elit venenatis non. Morbi sit amet placerat neque. Nunc hendrerit est consectetur dolor ultricies egestas. Morbi porttitor accumsan pulvinar. Etiam libero lectus, rhoncus eu vestibulum eu, vehicula non felis. Donec volutpat, erat at blandit luctus, quam justo tincidunt mi, in egestas velit arcu sit amet risus. Suspendisse massa quam, malesuada eu pretium nec, consequat molestie nulla. Aenean eget ligula quis arcu commodo mattis eu non urna. Suspendisse ullamcorper sapien at dolor laoreet posuere. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus nec venenatis turpis. Maecenas nunc erat, consequat vel sollicitudin eu, ullamcorper vel ipsum. Mauris nisl ipsum, pulvinar nec semper tempus, gravida id nisl. Nam ac mauris in sem dignissim vehicula.<p>
+
+<p>Nullam fermentum consequat ligula at vulputate. Ut at erat lacus. In hac habitasse platea dictumst. Sed tincidunt bibendum ante, id lobortis purus hendrerit nec. Mauris a magna id nisi laoreet dictum. Morbi dignissim, purus ut auctor pulvinar, quam purus egestas lectus, a volutpat leo est a ante. Nullam nec odio lectus. In in tellus tortor, nec tristique mauris. Praesent a condimentum tellus. Sed et risus massa, vitae feugiat sapien. Nam aliquam mauris a diam tempor lacinia. Etiam mattis vulputate lorem, eget pulvinar diam volutpat at. Maecenas dui mauris, tincidunt a ultrices sit amet, consequat quis urna. Duis lacinia pretium lacus auctor aliquet. Etiam vel erat ac nisi feugiat pellentesque. Donec id lacinia dolor. Donec luctus lectus quam. Praesent eu magna eros. Suspendisse rutrum est dignissim enim faucibus viverra.<p>
+
+<p>Suspendisse non tortor in ligula aliquet tempor. Vestibulum tincidunt libero id magna consequat id luctus diam porta. Maecenas sodales, sapien non sagittis ornare, risus ante pellentesque turpis, ac rutrum justo lacus et sem. Curabitur non erat commodo est placerat tempus. Praesent vel feugiat felis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sagittis auctor pellentesque. Praesent consequat rhoncus tellus in facilisis. Morbi in velit massa. Curabitur et elit mi. Nunc quis nisl odio.<p>
+
+<p>Nullam molestie cursus venenatis. Nam pretium suscipit diam, commodo luctus diam congue ut. Quisque facilisis aliquam purus non tristique. In hac habitasse platea dictumst. Curabitur porttitor tortor quis purus bibendum feugiat. Suspendisse eget nulla quis ipsum bibendum eleifend vestibulum cursus sem. Etiam placerat lacinia justo et volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut mi magna, mattis quis porta at, dignissim ut sapien. Etiam eu ante in elit convallis laoreet. Vestibulum nec felis libero. Maecenas sagittis vehicula neque eu auctor. Nullam et aliquam ante.</p>
+							</div>
+						</div>
+					</div>
+			</div><!-- / -->
+            {% endif %}
+		</div><!-- /content container -->
+	</div><!-- /content -->
+	
+	<div class="clearfix"></div>
+	
+	<div id="footer" class="container_12">
+		<div id="footer-container" class="grid_12">Footer</div><!-- /footer container -->
+	</div><!-- /footer -->
+
+
+  <!-- Javascript at the bottom for fast page loading -->
+
+  <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.4.2.js"%3E%3C/script%3E'))</script>
+  <script src="/js/jquery.fancybox-1.3.4.pack.js"></script>
+  <script src="/js/jquery.cookie.js"></script>
+  
+  <!-- scripts concatenated and minified via ant build script-->
+  <script src="/js/plugins.js"></script>
+  <script src="/js/script.js"></script>
+  <!-- end concatenated and minified scripts-->
+  
+  
+  <!--[if lt IE 7 ]>
+    <script src="js/libs/dd_belatedpng.js"></script>
+    <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+  <![endif]-->
+
+  <!-- yui profiler and profileviewer - remove for production -->
+  <script src="/js/profiling/yahoo-profiling.min.js"></script>
+  <script src="/js/profiling/config.js"></script>
+  <!-- end profiling code -->
+
+
+  <!-- asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet 
+       change the UA-XXXXX-X to be your site's ID -->
+  <script>
+   var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
+   (function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.async = true;
+    g.src = ('https:' == location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s);
+   })(document, 'script');
+  </script>
+  
+</body>
+</html>

@@ -32,9 +32,6 @@ class ShareStoryForm(forms.Form):
 
     def __init__(self, friends, *args, **kwargs): 
         super(ShareStoryForm, self).__init__(*args, **kwargs)
-        self.fields['friends_choice'].choices = [[x.user_uuid,x] for x in friends]
-
-
-
-
+        #self.fields['friends_choice'].choices = [[x.user_uuid,x] for x in friends]
+        self.fields['friends_choice'].choices = [[x.id,x] for x in friends]
 

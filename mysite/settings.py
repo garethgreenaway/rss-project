@@ -82,7 +82,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/root/code/rss-project/templates",
+    "./templates",
 )
 
 INSTALLED_APPS = (
@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'south',
     'djcelery',
     'registration',
     'la_facebook',
@@ -181,7 +182,8 @@ BROKER_VHOST = "myvhost"
 FACEBOOK_ACCESS_SETTINGS = {
     "FACEBOOK_APP_ID": "149489075118693",
     "FACEBOOK_APP_SECRET": "44d555ac2653ed7233ab6ab0da9c4f8f",
-    "LOG_LEVEL": "DEBUG",
+    "PROVIDER_SCOPE": ["user_status", "read_friendlists", "read_stream", "publish_stream", "offline_access"],
+    #"LOG_LEVEL": "DEBUG",
     "LOG_FILE": "/tmp/la_facebook.log",
 }
 

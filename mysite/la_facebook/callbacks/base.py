@@ -17,6 +17,8 @@ class BaseFacebookCallback(object):
     FACEBOOK_GRAPH_FRIENDS_TARGET = FACEBOOK_GRAPH_TARGET + "/friends"
 
     def __call__(self, request, access, token):
+
+        print request.user
         if not request.user.is_authenticated():
             logger.debug("BaseFacebookCallback.__call__:'\
                     ' request.user not authenticated")

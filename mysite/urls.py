@@ -33,17 +33,18 @@ urlpatterns = patterns('',
     (r'^category/submitted/$', 'mysite.browseFeeds.views.categorySubmitted'),
     (r'^facebook_debug/', direct_to_template, {'template':'facebook_debug.html'}),  
     (r'^accounts/', include('registration.urls')),
-    url(r"^la_facebook/", include("la_facebook.urls")),
+    url(r"^la_facebook/login/", include("la_facebook.urls"), {'display': 'popup'}),
+    url(r"^la_facebook/callback/", include("la_facebook.urls")),
 )
 
 
 if settings.DEBUG:
     urlpatterns += patterns('',
-        (r'^icons/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/icons'}),
-        (r'^images/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/images'}),
-        (r'^js/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/js'}),
-        (r'^css/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/css'}),
-        (r'^test/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/root/code/rss-project/www/test'}),
+        (r'^icons/(?P<path>.*)$', 'django.views.static.serve', {'document_root': './templates/www/icons'}),
+        (r'^images/(?P<path>.*)$', 'django.views.static.serve', {'document_root': './templates/www/images'}),
+        (r'^js/(?P<path>.*)$', 'django.views.static.serve', {'document_root': './templates/www/js'}),
+        (r'^css/(?P<path>.*)$', 'django.views.static.serve', {'document_root': './templates/www/css'}),
+        (r'^test/(?P<path>.*)$', 'django.views.static.serve', {'document_root': './templates/www/test'}),
         (r'^robots\.txt$', lambda r: HttpResponse("User-agent: *\nDisallow: /", mimetype="text/plain"))
     )
 

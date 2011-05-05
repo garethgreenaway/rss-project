@@ -48,6 +48,9 @@ def index(request, feed_uuid = None, story_uuid = None):
     feeds = []
     mcategories = []
 
+    print "user authenticated ",
+    print request.user.is_authenticated()
+
     if request.user.username:
 
         user = User.objects.filter(username__exact=request.user.username)[0]
@@ -97,7 +100,7 @@ def index(request, feed_uuid = None, story_uuid = None):
 
         latest_news.append({"uuid": feedItem.story_uuid, "title": feedItem.title, "summary": summary, "url": feedItem.url, "logo": site_logo})
 
-    return render_to_response('news/index.html', locals(), context_instance=RequestContext(request))
+    return render_to_response('www/index.html', locals(), context_instance=RequestContext(request))
 
 @login_required
 def viewInbox(request):
@@ -115,7 +118,8 @@ def shareStory_view(request, story_uuid):
     c = {}
     c.update(csrf(request))
 
-    friends = request.user.get_profile().friends.all()
+    #friends = request.user.get_profile().friends.all()
+    friends = request.user.get_profile().facebook_friends.all()
 
     if request.method == 'POST':
         form = ShareStoryForm(friends, request.POST)
